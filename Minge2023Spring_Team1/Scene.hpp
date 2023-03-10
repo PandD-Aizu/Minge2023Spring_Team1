@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include"common.hpp"
+#include"StageClass.hpp"
 class Title : public App::Scene
 {
 public:
@@ -26,4 +27,6 @@ public:
 
 	// 描画関数（オプション）
 	void draw() const override;
+private:
+	Blocks blocks;
 };
