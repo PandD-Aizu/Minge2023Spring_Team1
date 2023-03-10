@@ -113,7 +113,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="def.hpp" />
+    <ClCompile Include="common.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -316,6 +316,7 @@
     <Xml Include="App\example\xml\test.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="common.hpp" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
