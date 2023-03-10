@@ -156,8 +156,8 @@
     <ClCompile Include="Stage.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="StageSelect.cpp">
-      <Filter>Source Files\scene</Filter>
+    <ClCompile Include="common.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
