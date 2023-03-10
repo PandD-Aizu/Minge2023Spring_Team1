@@ -147,13 +147,16 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="def.hpp">
+    <ClCompile Include="common.hpp">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="Title.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="Stage.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="StageSelect.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
   </ItemGroup>
