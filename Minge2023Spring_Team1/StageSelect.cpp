@@ -2,6 +2,8 @@
 #include"Scene.hpp"
 
 
+
+
 StageSelect::StageSelect(const InitData & init)
 	: IScene{ init }
 {
