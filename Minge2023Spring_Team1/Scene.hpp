@@ -30,19 +30,6 @@ public:
 
 class StageSelect : public App::Scene
 {
-public:
-
-	// コンストラクタ（必ず実装）
-	StageSelect(const InitData& init);
-
-	// 更新関数（オプション）
-	void update() override;
-
-	// 描画関数（オプション）
-	void draw() const override;
-
-	
-
 private:
 
 	const Font font{ FontMethod::MSDF, 48, Typeface::Bold };
@@ -56,7 +43,7 @@ private:
 
 	struct ButtonItem
 	{
-		Rect rect;
+		RectF rect;
 		Font font;
 		String text;
 		bool enabled;
@@ -70,8 +57,24 @@ private:
 	};
 
 
+	int32 cursorPos = 0;
+	int32 cursorMax;
+
+
 	//ボタン関数
-	bool Button(const Rect& rect, bool enabled);
-	void ButtonDraw(const Rect& rect, const Font& font_, const String& text, bool enabled) const;
+	bool Button(const RectF& rect, bool enabled);
+	void ButtonDraw(const RectF& rect, const Font& font_, const String& text, bool enabled,bool Selected) const;
+
+
+public:
+
+	// コンストラクタ（必ず実装）
+	StageSelect(const InitData& init);
+
+	// 更新関数（オプション）
+	void update() override;
+
+	// 描画関数（オプション）
+	void draw() const override;
 
 };
