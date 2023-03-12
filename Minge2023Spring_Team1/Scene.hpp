@@ -40,4 +40,7 @@ public:
 
 	// 描画関数（オプション）
 	void draw() const override;
+
+	//ボタン関数
+	bool Button(const Rect& rect, const Font& font, const String& text, bool enabled);
 };
