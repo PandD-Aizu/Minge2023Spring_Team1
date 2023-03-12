@@ -5,11 +5,33 @@
 Stage::Stage(const InitData& init)
 	: IScene{ init }
 {
-	// ブロックの追加プログラム(仮なので削除・変更大歓迎)
-	tiles << Array<Tiles::Kind>{Tiles::Kind::Target, Tiles::Kind::None, Tiles::Kind::Wall, Tiles::Kind::None};
-	tiles << Array<Tiles::Kind>{Tiles::Kind::Wall, Tiles::Kind::None, Tiles::Kind::None, Tiles::Kind::None};
-	tiles << Array<Tiles::Kind>{Tiles::Kind::Wall, Tiles::Kind::Wall, Tiles::Kind::None, Tiles::Kind::Wall};
-	tiles << Array<Tiles::Kind>{Tiles::Kind::None, Tiles::Kind::None, Tiles::Kind::None, Tiles::Kind::None};
+	// CSVからtilesにデータを追加する
+	const CSV csv{ U"tiles.csv" };
+
+	if (not csv) // もし読み込みに失敗したら
+	{
+		throw Error{ U"Failed to load `tiles.csv`" };
+	}
+
+	for (size_t row = 0; row < csv.rows(); row++)
+	{
+		Array<Tiles::Kind> x;
+		for (auto& v : csv[row]) {
+			if (v.isEmpty() or v == U"0" or v == U"N" or v == U"None") {
+				x << Tiles::Kind::None;
+			}
+			else if (v==U"1" or v==U"W" or v==U"Wall") {
+				x << Tiles::Kind::Wall;
+			}
+			else if (v == U"2" or v == U"T" or v == U"Target") {
+				x << Tiles::Kind::Target;
+			}
+			else {
+				throw Error{U"csvに変なモノ({})が混じっています"_fmt(v)};
+			}
+		}
+		tiles << x;
+	}
 
 }
 
