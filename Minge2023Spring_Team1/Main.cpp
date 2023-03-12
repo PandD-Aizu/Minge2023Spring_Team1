@@ -10,6 +10,8 @@ void Main()
 	manager.add<Title>(SceneList::Title);
 	manager.add<Stage>(SceneList::Stage);
 
+	manager.init(SceneList::Stage);
+
 	// 画面サイズを変更
 	Window::Resize(1280, 720);
 

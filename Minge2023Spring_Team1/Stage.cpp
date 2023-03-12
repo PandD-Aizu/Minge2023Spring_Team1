@@ -3,7 +3,7 @@
 #include"StageClass.hpp"
 
 Stage::Stage(const InitData& init)
-	: IScene{ init }
+	: IScene{ init }, player(&tiles, {0, 0})
 {
 	// ブロックの追加プログラム(仮なので削除・変更大歓迎)
 	tiles << Array<Tiles::Kind>{Tiles::Kind::Target, Tiles::Kind::None, Tiles::Kind::Wall, Tiles::Kind::None};
@@ -16,6 +16,7 @@ Stage::Stage(const InitData& init)
 // 更新関数
 void Stage::update()
 {
+	player.update();
 }
 
 // 描画関数
@@ -23,4 +24,6 @@ void Stage::draw() const
 {
 	static int margin = 30, tiles_size = Scene::Height() - margin * 2;
 	tiles.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
+
+	player.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
 }
