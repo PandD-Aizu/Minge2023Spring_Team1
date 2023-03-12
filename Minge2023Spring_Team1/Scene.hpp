@@ -2,6 +2,11 @@
 #include"common.hpp"
 class Title : public App::Scene
 {
+private:
+	int32 buttonNum = 2; // ボタンの数
+	int32 cursorPosition = 0; // ボタン選択位置
+	RectF button_startGame; // スタートボタン
+	RectF button_quit; // 終了ボタン
 public:
 
 	// コンストラクタ（必ず実装）

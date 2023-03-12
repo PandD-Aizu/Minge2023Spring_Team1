@@ -114,7 +114,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common.cpp" />
-    <ClCompile Include="common.hpp" />
+    <ClCompile Include="common.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="stdafx.cpp">
