@@ -40,7 +40,7 @@ void Blocks::draw(Point left_upper, Point right_bottom) const {
 	for (int i = 0; i < blocks.size(); i++) {
 		for (int j = 0; j < blocks[i].size(); j++) {
 			// マスの作成
-			RectF box((Vec2)left_upper+Vec2(i*block_size,j*block_size),block_size);
+			RectF box((Vec2)left_upper+Vec2(j*block_size,i*block_size),block_size);
 
 			// マスの種類によって描画を変える
 			switch (blocks[i][j]) {
