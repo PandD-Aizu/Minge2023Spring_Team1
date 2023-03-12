@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include"common.hpp"
-class Blocks {
+class Tiles {
 public:
 	// マスの種類
 	enum class Kind {
@@ -21,5 +21,5 @@ public:
 	void draw(int, int, int, int) const;
 
 private:
-	Array<Array<Kind>> blocks;
+	Array<Array<Kind>> tiles;
 };

@@ -28,5 +28,5 @@ public:
 	// 描画関数（オプション）
 	void draw() const override;
 private:
-	Blocks blocks;
+	Tiles tiles;
 };

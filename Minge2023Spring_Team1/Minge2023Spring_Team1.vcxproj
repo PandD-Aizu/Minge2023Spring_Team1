@@ -113,7 +113,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="blocks.cpp" />
+    <ClCompile Include="tiles.cpp" />
     <ClCompile Include="common.cpp" />
     <ClCompile Include="common.hpp" />
     <ClCompile Include="Main.cpp" />
