@@ -11,8 +11,8 @@ public:
 	Array<Kind>& operator[](size_t y);
 	void operator<<(Array<Kind> row);
 
-	size_t size();
-	size_t width_size();
+	size_t size() const;
+	size_t width_size() const;
 
 	Array<Array<Kind>>::iterator begin();
 	Array<Array<Kind>>::iterator end();

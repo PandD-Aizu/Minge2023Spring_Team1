@@ -16,12 +16,11 @@ Stage::Stage(const InitData& init)
 // 更新関数
 void Stage::update()
 {
-
 }
 
 // 描画関数
 void Stage::draw() const
 {
-	static int margin = 10, blocks_size = Scene::Height() - margin * 2;
+	static int margin = 30, blocks_size = Scene::Height() - margin * 2;
 	blocks.draw(Scene::Center().x - blocks_size / 2, margin, Scene::Center().x + blocks_size / 2, Scene::Height() - margin);
 }
