@@ -67,7 +67,7 @@ void StageSelect::ButtonDraw(const RectF& rect, const Font& font_, const String&
 	if (enabled)
 	{
 		rect.draw(ColorF{ 0.2, 0.5, 1.0 });
-		rect.drawFrame(2, 2, ColorF{ 0.5, 0.7, 1.0 });
+		rect.drawFrame(2, 2, ColorF{ 0.4, 0.6, 1.0 });
 
 		font_(text).drawAt(40, (rect.x + rect.w / 2), (rect.y + rect.h / 2), ColorF{ 0.8 });
 	}
