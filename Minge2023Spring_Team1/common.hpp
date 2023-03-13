@@ -4,7 +4,8 @@
 // シーンの名前
 enum class SceneList {
 	Title,
-	Stage
+	Stage,
+	StageSelect
 };
 
 // 共有するデータ

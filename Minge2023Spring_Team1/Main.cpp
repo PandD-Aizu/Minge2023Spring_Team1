@@ -9,6 +9,9 @@ void Main()
 	// タイトルシーンを登録
 	manager.add<Title>(SceneList::Title);
 	manager.add<Stage>(SceneList::Stage);
+	manager.add<StageSelect>(SceneList::StageSelect);
+
+	manager.init(SceneList::StageSelect);
 
 	manager.init(SceneList::Stage);
 
