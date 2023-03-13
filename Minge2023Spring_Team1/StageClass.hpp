@@ -20,6 +20,14 @@ public:
 	void draw(Point, Point) const;
 	void draw(int, int, int, int) const;
 
+	// @brief 残っているターゲットの数を返す
+	int32 getTargetNum() const;
+
+	// @brief 指定位置にあるターゲットを破壊する
+	// @param position 対象ターゲットの位置
+	// @return 正常に破壊できた場合trueを返す
+	bool breakTarget(Point position);
+
 private:
 	Array<Array<Kind>> tiles;
 };

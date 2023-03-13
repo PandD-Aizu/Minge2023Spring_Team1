@@ -55,8 +55,8 @@ void Player::move(int direction, bool isDash) {
 		}
 		else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
 			// ターゲットだった場合
-			// 移動せず終了
-			break;
+			// ターゲットを破壊してそのまま進む
+			tiles.breakTarget(nextPos);
 		}
 
 		// 移動確定

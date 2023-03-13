@@ -39,13 +39,24 @@ Stage::Stage(const InitData& init)
 void Stage::update()
 {
 	player.update();
+	// ゲームクリア判定
+	if (tiles.getTargetNum() == 0) gameClearFlag = true;
 }
 
-// 描画関数
+// 描画関数   
 void Stage::draw() const
 {
 	static int margin = 30, tiles_size = Scene::Height() - margin * 2;
+	static Font font_gameClear{ static_cast<int32>(Scene::Height() * 0.3 * 0.8), Typeface::Bold };
+
 	tiles.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
 
 	player.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
+
+	if (gameClearFlag) {
+		// ゲームクリア時に表示
+		RectF gameClearBack{ 0, Scene::Height() * 0.35, Scene::Width(), Scene::Height() * 0.3 };
+		gameClearBack.draw(ColorF{ Palette::Gray, 0.8 });
+		font_gameClear(U"GAME CLEAR!!").drawAt(gameClearBack.center(), Palette::Yellow);
+	}
 }

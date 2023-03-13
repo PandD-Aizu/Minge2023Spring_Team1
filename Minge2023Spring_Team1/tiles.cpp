@@ -64,3 +64,21 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 void Tiles::draw(int x1, int y1, int x2, int y2) const {
 	draw(Point(x1, y1), Point(x2, y2));
 }
+
+int32 Tiles::getTargetNum() const {
+	int32 targetNum = 0;
+	for (int i = 0; i < tiles.size(); i++) {
+		for (int j = 0; j < tiles[i].size(); j++) {
+			if (tiles[i][j] == Tiles::Kind::Target) targetNum++;
+		}
+	}
+	return targetNum;
+}
+
+bool Tiles::breakTarget(Point position) {
+	if (tiles[position.y][position.x] == Tiles::Kind::Target) {
+		tiles[position.y][position.x] = Tiles::Kind::None;
+		return true;
+	}
+	return false;
+}
