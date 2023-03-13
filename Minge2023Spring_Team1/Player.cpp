@@ -62,6 +62,14 @@ void Player::move(int direction, bool isDash) {
 		// 移動確定
 		position = nextPos;
 
-		if (!isDash) break; // ダッシュが有効な場合、移動し続ける
+		if (!isDash) {
+			walk_count++;
+			break;
+		}
+		// ダッシュが有効な場合、移動し続ける
 	}
+}
+
+size_t Player::get_walk_count() const{
+	return walk_count;
 }
