@@ -62,7 +62,6 @@ public:
 	bool isGameCleared() const;
 
 private:
-	Tiles& tiles;
 	// 盤上での位置
 	Point position{ 0, 0 };
 	Tiles &tiles;
