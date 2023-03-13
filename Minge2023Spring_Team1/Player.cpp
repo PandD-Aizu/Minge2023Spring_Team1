@@ -7,7 +7,7 @@ constexpr Point deltaPosList[] = {
 	{ 1, 0 }
 };
 
-Player::Player(Tiles *tiles, Point position)
+Player::Player(Tiles &tiles, Point position)
 	: tiles{ tiles }, position{ position } {}
 
 void Player::update() {
@@ -27,7 +27,7 @@ void Player::update() {
 
 void Player::draw(Point left_upper, Point right_bottom) const {
 	//ブロックのサイズ算出 (tiles.cppから引用)
-	double block_size = Min((double)(right_bottom.y - left_upper.y) / tiles->size(), (double)(right_bottom.x - left_upper.x) / tiles->width_size());
+	double block_size = Min((double)(right_bottom.y - left_upper.y) / tiles.size(), (double)(right_bottom.x - left_upper.x) / tiles.width_size());
 
 	Vec2 drawPos = left_upper + (position + Vec2{ 0.5, 0.5 }) * block_size;
 	Circle{ drawPos, block_size * 0.25 }.draw(Palette::Blue);
@@ -44,16 +44,16 @@ void Player::move(int direction, bool isDash) {
 		Point nextPos = position + deltaPos;
 
 		// 盤上範囲内チェック
-		if (nextPos.x < 0 || nextPos.y < 0 || nextPos.y >= tiles->size()) break;
-		if (nextPos.x >= (*tiles)[nextPos.y].size()) break;
+		if (nextPos.x < 0 || nextPos.y < 0 || nextPos.y >= tiles.size()) break;
+		if (nextPos.x >= tiles[nextPos.y].size()) break;
 
 		// タイルチェック
-		if ((*tiles)[nextPos.y][nextPos.x] == Tiles::Kind::Wall) {
+		if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Wall) {
 			// 壁だった場合
 			// 移動せず終了
 			break;
 		}
-		else if ((*tiles)[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
+		else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
 			// ターゲットだった場合
 			// 移動せず終了
 			break;

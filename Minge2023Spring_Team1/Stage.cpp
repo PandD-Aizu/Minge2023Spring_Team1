@@ -3,7 +3,7 @@
 #include"StageClass.hpp"
 
 Stage::Stage(const InitData& init)
-	: IScene{ init }, player(&tiles, {0, 0})
+	: IScene{ init }, player(tiles, {0, 0})
 {
 	// ブロックの追加プログラム(仮なので削除・変更大歓迎)
 	tiles << Array<Tiles::Kind>{Tiles::Kind::Target, Tiles::Kind::None, Tiles::Kind::Wall, Tiles::Kind::None};

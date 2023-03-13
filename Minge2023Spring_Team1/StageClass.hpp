@@ -31,7 +31,7 @@ public:
 	* @param tiles 盤面を参照するために必要
 	* @param position 初期位置
 	*/
-	Player(Tiles *tiles, Point position);
+	Player(Tiles &tiles, Point position);
 
 	// 毎フレーム呼ぶ
 	void update();
@@ -49,5 +49,5 @@ public:
 private:
 	// 盤上の位置
 	Point position{ 0, 0 };
-	Tiles *tiles;
+	Tiles &tiles;
 };
