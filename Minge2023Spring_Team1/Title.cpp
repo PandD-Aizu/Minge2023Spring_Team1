@@ -31,10 +31,8 @@ void Title::update()
 	else if (button_quit.mouseOver()) cursorPosition = 1;
 
 	// ボタン決定
-	if (KeyEnter.down() || MouseL.down()) {
-		//if (cursorPosition == 0 || button_startGame.mouseOver()) changeScene(SceneList::); // ステージセレクトへ遷移する
-		if (cursorPosition == 1 || button_quit.mouseOver()) System::Exit(); // ゲーム終了
-	}
+	if ((KeyEnter.down() && cursorPosition == 0) || button_startGame.leftClicked()) changeScene(SceneList::StageSelect); // ステージセレクトへ遷移する
+	if ((KeyEnter.down() && cursorPosition == 1) || button_quit.leftClicked()) System::Exit(); // ゲーム終了
 }
 
 // 描画関数
