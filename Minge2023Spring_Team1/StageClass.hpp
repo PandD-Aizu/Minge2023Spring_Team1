@@ -54,8 +54,12 @@ public:
 	* @param isDash ダッシュを有効にするか
 	*/
 	void move(int direction, bool isDash = false);
+	// @return ゲームクリア時true
+	bool isGameCleared() const;
 private:
-	// 盤上の位置
+	Tiles& tiles;
+	// 盤上での位置
 	Point position{ 0, 0 };
-	Tiles &tiles;
+	// ゲームクリア時にtrue
+	bool gameClearFlag = false;
 };

@@ -39,8 +39,6 @@ Stage::Stage(const InitData& init)
 void Stage::update()
 {
 	player.update();
-	// ゲームクリア判定
-	if (tiles.getTargetNum() == 0) gameClearFlag = true;
 }
 
 // 描画関数   
@@ -53,7 +51,7 @@ void Stage::draw() const
 
 	player.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
 
-	if (gameClearFlag) {
+	if (player.isGameCleared()) {
 		// ゲームクリア時に表示
 		RectF gameClearBack{ 0, Scene::Height() * 0.35, Scene::Width(), Scene::Height() * 0.3 };
 		gameClearBack.draw(ColorF{ Palette::Gray, 0.8 });

@@ -28,8 +28,6 @@ public:
 	// 描画関数（オプション）
 	void draw() const override;
 private:
-	// ゲームクリアのときtrue
-	bool gameClearFlag = false;
 	Tiles tiles;
 	Player player;
 };
