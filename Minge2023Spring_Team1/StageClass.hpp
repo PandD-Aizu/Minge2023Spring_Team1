@@ -20,6 +20,14 @@ public:
 	void draw(Point, Point) const;
 	void draw(int, int, int, int) const;
 
+	// @brief 残っているターゲットの数を返す
+	int32 getTargetNum() const;
+
+	// @brief 指定位置にあるターゲットを破壊する
+	// @param position 対象ターゲットの位置
+	// @return 正常に破壊できた場合trueを返す
+	bool breakTarget(Point position);
+
 private:
 	Array<Array<Kind>> tiles;
 };
@@ -46,8 +54,12 @@ public:
 	* @param isDash ダッシュを有効にするか
 	*/
 	void move(int direction, bool isDash = false);
+	// @return ゲームクリア時true
+	bool isGameCleared() const;
 private:
-	// 盤上の位置
+	Tiles& tiles;
+	// 盤上での位置
 	Point position{ 0, 0 };
-	Tiles &tiles;
+	// ゲームクリア時にtrue
+	bool gameClearFlag = false;
 };

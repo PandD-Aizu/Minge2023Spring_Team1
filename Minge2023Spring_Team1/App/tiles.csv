@@ -1,4 +1,8 @@
-2,1,,Target
-0,Wall,None,T
-N,N,N,W
-N,N,W,N
+2,1,,Target,N,N,N,N
+0,Wall,None,T,N,N,N,N
+N,N,N,W,N,N,N,N
+N,N,W,N,N,N,N,N
+N,N,N,2,2,N,N,N
+N,N,N,2,N,N,N,N
+N,N,N,N,N,N,N,N
+N,N,N,N,N,N,N,N

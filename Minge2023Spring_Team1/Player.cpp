@@ -55,8 +55,9 @@ void Player::move(int direction, bool isDash) {
 		}
 		else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
 			// ターゲットだった場合
-			// 移動せず終了
-			break;
+			// ターゲットを破壊してそのまま進む
+			tiles.breakTarget(nextPos);
+			if (tiles.getTargetNum() == 0) gameClearFlag = true;
 		}
 
 		// 移動確定
@@ -64,4 +65,8 @@ void Player::move(int direction, bool isDash) {
 
 		if (!isDash) break; // ダッシュが有効な場合、移動し続ける
 	}
+}
+
+bool Player::isGameCleared() const {
+	return gameClearFlag;
 }
