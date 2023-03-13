@@ -54,12 +54,22 @@ public:
 	* @param isDash ダッシュを有効にするか
 	*/
 	void move(int direction, bool isDash = false);
+
+	// @brief 一マス移動の回数のゲッター関数
+	size_t get_walk_count() const;
+
 	// @return ゲームクリア時true
 	bool isGameCleared() const;
+
 private:
 	Tiles& tiles;
 	// 盤上での位置
 	Point position{ 0, 0 };
+	Tiles &tiles;
+
+	// 歩行回数
+	size_t walk_count=0;
+
 	// ゲームクリア時にtrue
 	bool gameClearFlag = false;
 };

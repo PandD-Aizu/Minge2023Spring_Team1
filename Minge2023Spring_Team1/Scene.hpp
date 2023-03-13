@@ -28,6 +28,8 @@ public:
 	// 描画関数（オプション）
 	void draw() const override;
 private:
+	Stopwatch clear_time;
+
 	Tiles tiles;
 	Player player;
 };
