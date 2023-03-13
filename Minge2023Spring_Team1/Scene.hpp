@@ -29,4 +29,5 @@ public:
 	void draw() const override;
 private:
 	Tiles tiles;
+	Player player;
 };

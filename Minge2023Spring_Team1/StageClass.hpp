@@ -23,3 +23,31 @@ public:
 private:
 	Array<Array<Kind>> tiles;
 };
+
+// プレイヤー
+class Player {
+public:
+	/**
+	* @param tiles 盤面を参照するために必要
+	* @param position 初期位置
+	*/
+	Player(Tiles &tiles, Point position);
+
+	// 毎フレーム呼ぶ
+	void update();
+
+	// @brief 描画
+	void draw(Point left_upper, Point right_bottom) const;
+	// @brief 描画
+	void draw(int, int, int, int) const;
+	/**
+	* @brief 移動する
+	* @param direction 移動方向（上:0 下:1 左:2 右:3）
+	* @param isDash ダッシュを有効にするか
+	*/
+	void move(int direction, bool isDash = false);
+private:
+	// 盤上の位置
+	Point position{ 0, 0 };
+	Tiles &tiles;
+};
