@@ -41,11 +41,13 @@ void Stage::update()
 	player.update();
 }
 
-// 描画関数
+// 描画関数   
 void Stage::draw() const
 {
 	static Font font(40);
 	static int margin = 30, tiles_size = Scene::Height() - margin * 2;
+	static Font font_gameClear{ static_cast<int32>(Scene::Height() * 0.3 * 0.8), Typeface::Bold };
+
 	tiles.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
 
 	player.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
@@ -53,4 +55,11 @@ void Stage::draw() const
 	const int score_x_pos = Scene::Center().x + tiles_size / 2 + 120;
 	font(clear_time.format(U"MM:ss:xx")).drawAt(score_x_pos, 50);
 	font(U"歩行:{}回"_fmt(player.get_walk_count())).drawAt(score_x_pos, 100);
+
+	if (player.isGameCleared()) {
+		// ゲームクリア時に表示
+		RectF gameClearBack{ 0, Scene::Height() * 0.35, Scene::Width(), Scene::Height() * 0.3 };
+		gameClearBack.draw(ColorF{ Palette::Gray, 0.8 });
+		font_gameClear(U"GAME CLEAR!!").drawAt(gameClearBack.center(), Palette::Yellow);
+	}
 }

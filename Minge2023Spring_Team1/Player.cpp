@@ -55,8 +55,9 @@ void Player::move(int direction, bool isDash) {
 		}
 		else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
 			// ターゲットだった場合
-			// 移動せず終了
-			break;
+			// ターゲットを破壊してそのまま進む
+			tiles.breakTarget(nextPos);
+			if (tiles.getTargetNum() == 0) gameClearFlag = true;
 		}
 
 		// 移動確定
@@ -72,4 +73,8 @@ void Player::move(int direction, bool isDash) {
 
 size_t Player::get_walk_count() const{
 	return walk_count;
+}
+
+bool Player::isGameCleared() const {
+	return gameClearFlag;
 }
