@@ -39,6 +39,19 @@ Stage::Stage(const InitData& init)
 void Stage::update()
 {
 	player.update();
+
+	// ゲームクリア時
+	if (player.isGameCleared()) {
+		// クリアタイムが動いていたら止める
+		if (clear_time.isRunning()) {
+			clear_time.pause();
+		}
+
+		// シフトを押したらシーンをステージセレクトに戻す
+		if (KeyShift.down()) {
+			changeScene(SceneList::StageSelect);
+		}
+	}
 }
 
 // 描画関数   
@@ -46,7 +59,8 @@ void Stage::draw() const
 {
 	static Font font(40);
 	static int margin = 30, tiles_size = Scene::Height() - margin * 2;
-	static Font font_gameClear{ static_cast<int32>(Scene::Height() * 0.3 * 0.8), Typeface::Bold };
+	static Font font_gameClear{ 85, Typeface::Bold };
+	static Font font_score{ 50 };
 
 	tiles.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
 
@@ -57,9 +71,18 @@ void Stage::draw() const
 	font(U"歩行:{}回"_fmt(player.get_walk_count())).drawAt(score_x_pos, 100);
 
 	if (player.isGameCleared()) {
-		// ゲームクリア時に表示
-		RectF gameClearBack{ 0, Scene::Height() * 0.35, Scene::Width(), Scene::Height() * 0.3 };
-		gameClearBack.draw(ColorF{ Palette::Gray, 0.8 });
-		font_gameClear(U"GAME CLEAR!!").drawAt(gameClearBack.center(), Palette::Yellow);
+		// ゲームクリア時の表示
+
+		RectF transparent{ 0, 0, Scene::Width(), Scene::Height() }; // ゲーム画面を透過するRectF
+		RectF score_board{ Arg::center(transparent.center()),Scene::Width() * 0.6, Scene::Height() * 0.6 };
+
+		transparent.draw(ColorF{ Palette::Gray, 0.8 });
+		score_board.draw(Palette::White);
+
+		auto pos = font_gameClear(U"GAME CLEAR!!").draw(Arg::topCenter = score_board.topCenter(), Palette::Yellow);
+		pos = font_score(U"クリアタイム: {}"_fmt(clear_time.format(U"MM:ss:xx"))).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // クリアタイムの表示
+		pos = font_score(U"歩行回数: {}回"_fmt(player.get_walk_count())).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // 歩行回数の表示
+		pos = font_score(U"スコア: {}"_fmt(U"hoge")).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // スコアの表示
+		font_score(U"SHIFTキーでステージセレクトへ").draw(Arg::bottomCenter = score_board.bottomCenter(), Palette::Black);
 	}
 }
