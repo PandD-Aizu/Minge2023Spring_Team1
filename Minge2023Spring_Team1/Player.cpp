@@ -1,27 +1,58 @@
 ﻿#include "StageClass.hpp"
 
-constexpr Point deltaPosList[] = {
-	{ 0, -1 },
-	{ 0, 1 },
-	{ -1, 0 },
-	{ 1, 0 }
-};
-
 Player::Player(Tiles &tiles, Point position)
-	: tiles{ tiles }, position{ position } {}
+	: tiles{ tiles }, position{ position } {
+	delayTimer.setRemaining(0s);
+	delayTimer.start();
+}
 
 void Player::update() {
-	if (inputUp.pressed()) {
-		move(0, KeyShift.pressed());
-	}
-	else if (inputDown.pressed()) {
-		move(1, KeyShift.pressed());
-	}
-	else if (inputLeft.pressed()) {
-		move(2, KeyShift.pressed());
-	}
-	else if (inputRight.pressed()) {
-		move(3, KeyShift.pressed());
+	if (delayTimer.reachedZero()) {
+		if (!dashFlag) {
+			// ダッシュ移動中でない場合
+			// 方向入力受付
+			if (inputUp.pressed()) direction = Direction::Up;
+			else if (inputDown.pressed()) direction = Direction::Down;
+			else if (inputLeft.pressed()) direction = Direction::Left;
+			else if (inputRight.pressed()) direction = Direction::Right;
+			else return; // 移動キーを押さなかった場合はここで処理終了
+
+			// ↓↓↓方向キーを押した場合の処理↓↓↓
+			if (KeyShift.pressed()) {
+				// ダッシュ移動開始
+				dashFlag = true;
+			}
+			else {
+				// 通常歩行処理
+				if (move(direction) != Direction::None) {
+					// 進行方向に壁がなく移動に成功した場合
+					walk_count++;
+					// 行動遅延設定
+					delayTimer.set(WALKING_DELAY);
+					delayTimer.start();
+				}
+			}
+			// ↑↑↑方向キーを押した場合の処理↑↑↑　ここまで
+		}
+
+		if (dashFlag) {
+			// ダッシュ移動中の場合
+
+			// そのまま移動する
+			Direction nextDirection = move(direction);
+
+			if (nextDirection != Direction::None) {
+				// 移動できた場合
+				direction = nextDirection;
+				// 行動遅延設定
+				delayTimer.set(DASHING_DELAY);
+				delayTimer.start();
+			}
+			else {
+				// 移動できなかった場合、ダッシュ移動を終了する
+				dashFlag = false;
+			}
+		}
 	}
 }
 
@@ -33,6 +64,7 @@ void Player::draw(Point left_upper, Point right_bottom) const {
 	Vec2 destinationPos = left_upper + (position + Vec2{ 0.5, 0.5 }) * block_size;
 	Vec2 pathVector = destinationPos - originPos;
 	Vec2 drawPos = originPos + pathVector * (1 - delayTimer.remaining() / delayTimer.duration());
+
 	Circle{ drawPos, block_size * 0.25 }.draw(Palette::Blue);
 }
 
@@ -40,49 +72,41 @@ void Player::draw(int x1, int y1, int x2, int y2) const {
 	draw(Point{ x1, y1 }, Point{ x2, y2 });
 }
 
-void Player::move(int direction, bool isDash) {
-	// 行動遅延チェック
-	if (!delayTimer.reachedZero()) return;
-
+Player::Direction Player::move(Direction direction) {
 	// 移動前位置を記録
 	lastPosition = position;
 
 	// 進行方向
-	Point deltaPos = deltaPosList[direction];
+	Point deltaPos;
+	if (direction == Direction::Up) deltaPos = { 0, -1 };
+	else if (direction == Direction::Down) deltaPos = { 0, 1 };
+	else if (direction == Direction::Left) deltaPos = { -1, 0 };
+	else if (direction == Direction::Right) deltaPos = { 1, 0 };
+	else return Direction::None;
 
-	while (true) {
-		Point nextPos = position + deltaPos;
+	Point nextPos = position + deltaPos;
 
-		// 盤上範囲内チェック
-		if (nextPos.x < 0 || nextPos.y < 0 || nextPos.y >= tiles.size()) break;
-		if (nextPos.x >= tiles[nextPos.y].size()) break;
+	// 盤上範囲内チェック
+	if (nextPos.x < 0 || nextPos.y < 0 || nextPos.y >= tiles.size()) return Direction::None;
+	if (nextPos.x >= tiles[nextPos.y].size()) return Direction::None;
 
-		// タイルチェック
-		if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Wall) {
-			// 壁だった場合
-			// 移動せず終了
-			break;
-		}
-		else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
-			// ターゲットだった場合
-			// ターゲットを破壊してそのまま進む
-			tiles.breakTarget(nextPos);
-			if (tiles.getTargetNum() == 0) gameClearFlag = true;
-		}
-
-		// 移動確定
-		position = nextPos;
-
-		if (!isDash) {
-			walk_count++;
-			break;
-		}
-		// ダッシュが有効な場合、移動し続ける
+	// タイルチェック
+	if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Wall) {
+		// 壁だった場合
+		// 移動せず終了
+		return Direction::None;
+	}
+	else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
+		// ターゲットだった場合
+		// ターゲットを破壊して進む
+		tiles.breakTarget(nextPos);
+		if (tiles.getTargetNum() == 0) gameClearFlag = true;
 	}
 
-	// 行動遅延設定
-	delayTimer.set(isDash ? 0.6s : 0.4s);
-	delayTimer.start();
+	// 移動確定
+	position = nextPos;
+
+	return direction;
 }
 
 size_t Player::get_walk_count() const{
