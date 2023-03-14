@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include"common.hpp"
+
 class Tiles {
 public:
 	// マスの種類
@@ -62,9 +63,14 @@ public:
 	bool isGameCleared() const;
 
 private:
+	Tiles& tiles;
+
 	// 盤上での位置
 	Point position{ 0, 0 };
-	Tiles &tiles;
+	// アニメーション開始時点での位置
+	Point lastPosition{ 0, 0 };
+	// 行動遅延タイマー（アニメーション用のタイマー）
+	Timer delayTimer{ 0s };
 
 	// 歩行回数
 	size_t walk_count=0;
