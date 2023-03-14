@@ -72,16 +72,16 @@ void Player::draw(int x1, int y1, int x2, int y2) const {
 	draw(Point{ x1, y1 }, Point{ x2, y2 });
 }
 
-Player::Direction Player::move(Direction direction) {
+Player::Direction Player::move(Direction movingDirection) {
 	// 移動前位置を記録
 	lastPosition = position;
 
 	// 進行方向
 	Point deltaPos;
-	if (direction == Direction::Up) deltaPos = { 0, -1 };
-	else if (direction == Direction::Down) deltaPos = { 0, 1 };
-	else if (direction == Direction::Left) deltaPos = { -1, 0 };
-	else if (direction == Direction::Right) deltaPos = { 1, 0 };
+	if (movingDirection == Direction::Up) deltaPos = { 0, -1 };
+	else if (movingDirection == Direction::Down) deltaPos = { 0, 1 };
+	else if (movingDirection == Direction::Left) deltaPos = { -1, 0 };
+	else if (movingDirection == Direction::Right) deltaPos = { 1, 0 };
 	else return Direction::None;
 
 	Point nextPos = position + deltaPos;
@@ -106,7 +106,7 @@ Player::Direction Player::move(Direction direction) {
 	// 移動確定
 	position = nextPos;
 
-	return direction;
+	return movingDirection;
 }
 
 size_t Player::get_walk_count() const{
