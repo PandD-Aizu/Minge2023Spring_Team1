@@ -2,22 +2,32 @@
 #include"common.hpp"
 class Tiles {
 public:
+	// @param stage_number ステージ番号
+	Tiles(int stage_number=0);
+
 	// マスの種類
 	enum class Kind {
 		None,
 		Wall,
 		Target,
 	};
+
 	Array<Kind>& operator[](size_t y);
 	void operator<<(Array<Kind> row);
 
+	// @brief マスの縦方向のサイズ
 	size_t size() const;
+	// @brief マスの横方向のサイズを返す
 	size_t width_size() const;
 
 	Array<Array<Kind>>::iterator begin();
 	Array<Array<Kind>>::iterator end();
 
+	// @brief マスの描画
+	// @param left_upper,right_bottom 描画できる範囲の左上の点と右下の点
 	void draw(Point, Point) const;
+	// @brief マスの描画
+	// @param left,upper,right,bottom 描画できる範囲の上下左右
 	void draw(int, int, int, int) const;
 
 	// @brief 残っているターゲットの数を返す
@@ -30,6 +40,12 @@ public:
 
 private:
 	Array<Array<Kind>> tiles;
+
+	// @breif 何もないフィールドの描画
+	void drawNone(RectF,int,int) const;
+
+	// ステージ番号
+	int stage_number=0;
 };
 
 // プレイヤー

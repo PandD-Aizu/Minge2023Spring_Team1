@@ -13,6 +13,7 @@ Stage::Stage(const InitData& init)
 		throw Error{ U"Failed to load `tiles.csv`" };
 	}
 
+	tiles = Tiles(1);
 	for (size_t row = 0; row < csv.rows(); row++)
 	{
 		Array<Tiles::Kind> x;

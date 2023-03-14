@@ -1,6 +1,11 @@
 ﻿#include"common.hpp"
 #include"StageClass.hpp"
 
+Tiles::Tiles(int stage_number)
+	:stage_number{ stage_number }
+{
+}
+
 Array<Tiles::Kind>& Tiles::operator[](size_t y) {
 	return tiles[y];
 }
@@ -40,12 +45,12 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 	for (int i = 0; i < tiles.size(); i++) {
 		for (int j = 0; j < tiles[i].size(); j++) {
 			// マスの作成
-			RectF box((Vec2)left_upper+Vec2(j*block_size,i*block_size),block_size);
+			RectF box((Vec2)left_upper + Vec2(j * block_size, i * block_size), block_size);
 
 			// マスの種類によって描画を変える
 			switch (tiles[i][j]) {
 			case Tiles::Kind::None:
-				box.draw(Palette::White);
+				drawNone(box, j, i);
 				break;
 			case Tiles::Kind::Wall:
 				box.draw(Palette::Brown);
@@ -63,6 +68,23 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 
 void Tiles::draw(int x1, int y1, int x2, int y2) const {
 	draw(Point(x1, y1), Point(x2, y2));
+}
+
+void Tiles::drawNone(RectF box, int x, int y) const {
+	// xとyとステージ番号からハッシュ値を取る
+	int hash = ((Hash::XXHash3(x) >> 1) xor Hash::XXHash3(y) xor Hash::XXHash3(stage_number)) % 6;
+	switch (hash)
+	{
+	case 0:
+		box.draw(Palette::Lightgray);
+		break;
+	case 1:
+		box.draw(Palette::Aqua);
+		break;
+	default:
+		box.draw(Palette::White);
+		break;
+	}
 }
 
 int32 Tiles::getTargetNum() const {
