@@ -38,8 +38,6 @@ Stage::Stage(const InitData& init)
 // 更新関数
 void Stage::update()
 {
-	player.update();
-
 	// ゲームクリア時
 	if (player.isGameCleared()) {
 		// クリアタイムが動いていたら止める
@@ -51,7 +49,11 @@ void Stage::update()
 		if (KeyShift.down()) {
 			changeScene(SceneList::StageSelect);
 		}
+		return;
 	}
+
+	// ゲームプレイ時
+	player.update();
 }
 
 // 描画関数   
