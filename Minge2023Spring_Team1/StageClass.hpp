@@ -69,6 +69,11 @@ public:
 		Right = 3,
 		None
 	};
+	enum class MoveStatus {
+		None, // 正常に終了
+		AutoWalk, // 自動的にもう一度移動する
+		Failed // 移動不可
+	};
 	/**
 	* @param tiles 盤面を参照するために必要
 	* @param position 初期位置
@@ -87,7 +92,7 @@ public:
 	* @param direction 移動方向（上:0 下:1 左:2 右:3）
 	* @return 次に移動する向き。壁があり移動できない場合はDirection::Noneが返される。
 	*/
-	Direction move(Direction direction);
+	MoveStatus move(Direction &direction);
 
 	// @brief 一マス移動の回数のゲッター関数
 	size_t get_walk_count() const;
@@ -113,6 +118,8 @@ private:
 	Timer delayTimer{ 0.1s };
 	// ダッシュ中true
 	bool dashFlag = false;
+	// 自動歩行中true
+	bool autoWalkFlag = false;
 
 	// 歩行回数
 	size_t walk_count=0;
