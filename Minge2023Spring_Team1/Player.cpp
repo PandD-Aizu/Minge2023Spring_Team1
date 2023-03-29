@@ -1,13 +1,24 @@
 ﻿#include "StageClass.hpp"
 
 Player::Player(Tiles &tiles, Point position)
-	: tiles{ tiles }, position{ position } {
+	: tiles{ tiles }, position{ position }
+{
 	delayTimer.setRemaining(0s);
 	delayTimer.start();
+
+	// テクスチャ読み込み
+	for (auto c : Array<char>{ 'b', 'f', 'l', 'r'}) {
+		for (int n = 0; n < 3; n++) {
+			textures << Texture{ U"sprites/player_{}{}.png"_fmt(c, n) };
+		}
+	}
 }
 
 void Player::update() {
 	if (delayTimer.reachedZero()) {
+		// 移動処理が終わったら描画上の向きも更新
+		directionForDraw = direction;
+
 		if (!dashFlag) {
 			// ダッシュ移動中でない場合
 			// 方向入力受付
@@ -16,6 +27,9 @@ void Player::update() {
 			else if (inputLeft.pressed()) direction = Direction::Left;
 			else if (inputRight.pressed()) direction = Direction::Right;
 			else return; // 移動キーを押さなかった場合はここで処理終了
+
+			// 押下キーに合わせて描画上の向きも更新
+			directionForDraw = direction;
 
 			// ↓↓↓方向キーを押した場合の処理↓↓↓
 			if (KeyShift.pressed()) {
@@ -60,12 +74,21 @@ void Player::draw(Point left_upper, Point right_bottom) const {
 	//ブロックのサイズ算出 (tiles.cppから引用)
 	double block_size = Min((double)(right_bottom.y - left_upper.y) / tiles.size(), (double)(right_bottom.x - left_upper.x) / tiles.width_size());
 
+	// 移動元座標
 	Vec2 originPos = left_upper + (lastPosition + Vec2{ 0.5, 0.5 }) * block_size;
+	// 移動先座標
 	Vec2 destinationPos = left_upper + (position + Vec2{ 0.5, 0.5 }) * block_size;
+	// 移動道のりベクトル
 	Vec2 pathVector = destinationPos - originPos;
-	Vec2 drawPos = originPos + pathVector * (1 - delayTimer.remaining() / delayTimer.duration());
+	// 移動の進行度(0～1.0)
+	double motionProgress = 1 - delayTimer.remaining() / delayTimer.duration();
+	// 現在の表示座標
+	Vec2 drawPos = originPos + pathVector * motionProgress;
 
-	Circle{ drawPos, block_size * 0.25 }.draw(Palette::Blue);
+	// 向いている方向 0:上 1:下 2:左 3:右
+	int32 directionInt = static_cast<int>(directionForDraw != Direction::None ? directionForDraw : Direction::Up);
+	// 描画
+	RectF{ block_size }(textures[directionInt * 3 + static_cast<int>(motionProgress * 3) % 3]).drawAt(drawPos);
 }
 
 void Player::draw(int x1, int y1, int x2, int y2) const {
