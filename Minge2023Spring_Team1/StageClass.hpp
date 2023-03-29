@@ -38,10 +38,10 @@ class Player {
 public:
 	// 向き
 	enum class Direction {
-		Up,
-		Down,
-		Left,
-		Right,
+		Up = 0,
+		Down = 1,
+		Left = 2,
+		Right = 3,
 		None
 	};
 	/**
@@ -81,7 +81,9 @@ private:
 	// アニメーション開始時点での位置
 	Point lastPosition{ 0, 0 };
 	// 向いている方向
-	Direction direction;
+	Direction direction = Direction::Down;
+	// 描画上の向いている方向
+	Direction directionForDraw = Direction::Down;
 	// 行動遅延タイマー（アニメーション用のタイマー）
 	Timer delayTimer{ 0.1s };
 	// ダッシュ中true
@@ -92,4 +94,8 @@ private:
 
 	// ゲームクリア時にtrue
 	bool gameClearFlag = false;
+
+
+	// テクスチャ
+	Array<Texture> textures;
 };
