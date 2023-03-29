@@ -51,7 +51,7 @@ void StageSelect::update()
 	{
 		KeyAccumulatedTime += Scene::DeltaTime();
 
-		if (KeyRight.down() || KeyAccumulatedTime >= 0.2) {
+		if (KeyRight.down() || KeyAccumulatedTime >= 0.3) {
 
 			cursorPos++;
 			cursorPos = cursorPos % cursorMax;
@@ -63,7 +63,7 @@ void StageSelect::update()
 	{
 		KeyAccumulatedTime += Scene::DeltaTime();
 
-		if (KeyLeft.down() || KeyAccumulatedTime >= 0.2) {
+		if (KeyLeft.down() || KeyAccumulatedTime >= 0.3) {
 
 			cursorPos--;
 			cursorPos += cursorMax;
