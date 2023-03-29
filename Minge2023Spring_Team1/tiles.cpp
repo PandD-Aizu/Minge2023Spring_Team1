@@ -6,6 +6,10 @@ Tiles::Tiles(int stage_number)
 {
 }
 
+void Tiles::setStageNumber(int n) {
+	stage_number = n;
+}
+
 Array<Tiles::Kind>& Tiles::operator[](size_t y) {
 	return tiles[y];
 }
@@ -41,7 +45,7 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 	//ブロックのサイズ算出
 	double block_size = Min((double)(right_bottom.y - left_upper.y) / size(), (double)(right_bottom.x - left_upper.x) / width_size());
 
-	// 仮の描画
+	// タイルの描画
 	for (int i = 0; i < tiles.size(); i++) {
 		for (int j = 0; j < tiles[i].size(); j++) {
 			// マスの作成
@@ -56,6 +60,7 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				box.draw(Palette::Brown);
 				break;
 			case Tiles::Kind::Target:
+				drawNone(box, j, i);
 				Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
 				break;
 			}
@@ -71,20 +76,29 @@ void Tiles::draw(int x1, int y1, int x2, int y2) const {
 }
 
 void Tiles::drawNone(RectF box, int x, int y) const {
+	Texture tile_image;
+
 	// xとyとステージ番号からハッシュ値を取る
 	int hash = ((Hash::XXHash3(x) >> 1) xor Hash::XXHash3(y) xor Hash::XXHash3(stage_number)) % 6;
 	switch (hash)
 	{
 	case 0:
-		box.draw(Palette::Lightgray);
+		tile_image = none_tile_texture[1];
 		break;
 	case 1:
-		box.draw(Palette::Aqua);
+		tile_image = none_tile_texture[2];
 		break;
 	default:
-		box.draw(Palette::White);
+		tile_image = none_tile_texture[0];
 		break;
 	}
+
+	// 拡大率を計算する
+	const double scaleX = static_cast<double>(box.w) / tile_image.width();
+	const double scaleY = static_cast<double>(box.h) / tile_image.height();
+
+	// 描画
+	tile_image.scaled(scaleX, scaleY).draw(box.pos);
 }
 
 int32 Tiles::getTargetNum() const {

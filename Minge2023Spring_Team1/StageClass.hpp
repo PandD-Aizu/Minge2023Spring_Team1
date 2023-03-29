@@ -5,6 +5,9 @@ public:
 	// @param stage_number ステージ番号
 	Tiles(int stage_number=0);
 
+	// @param stage_number ステージ番号
+	void setStageNumber(int);
+
 	// マスの種類
 	enum class Kind {
 		None,
@@ -46,6 +49,12 @@ private:
 
 	// ステージ番号
 	int stage_number=0;
+
+	const Array<Texture> none_tile_texture{
+		Texture{U"sprites/grass.png"},
+		Texture{U"sprites/grass_flower.png"},
+		Texture{U"sprites/grass_rock.png" },
+	};
 };
 
 // プレイヤー
