@@ -8,6 +8,36 @@ StageSelect::StageSelect(const InitData & init)
 	: IScene{ init }
 {
 
+	ButtonItem ArrItem;
+	String StagePass_;
+
+	for (size_t i = 0; i < 3; i++)
+	{
+		for (size_t j = 0; j < 7; j++) {
+
+			//ArrItem = { Rect{ 50 + 150 * j, 50 + 150 * i, 100, 100 }, font, U"{:0>3}"_fmt( i * 7 + j + 1 ), true, gotoGame };
+			ArrItem.rect = Rect{ 100 + 150 * j, 50 + 150 * i, 100, 100 };
+			ArrItem.font = font;
+			ArrItem.text = U"{:0>3}"_fmt(i * 7 + j + 1);
+			ArrItem.enabled = true;
+			ArrItem.response = gotoGame;
+
+			ArrItem.StageNo = i * 7 + j + 1;
+
+			StagePass_ = U"";
+			StagePass_ += U"{:0>3}"_fmt(i * 7 + j + 1);
+			StagePass_ += U".csv";
+			ArrItem.StagePass = StagePass_;
+
+			ButtonTable << ArrItem;
+
+		}
+	}
+
+	ArrItem = { Rect{ 900, 550, 300, 100 }, font, U"予備", false, other };
+	ButtonTable << ArrItem;
+
+	cursorMax = ButtonTable.size();
 }
 
 
@@ -15,18 +45,36 @@ StageSelect::StageSelect(const InitData & init)
 void StageSelect::update()
 {
 
-	if (KeyRight.down()) {
 
-		cursorPos++;
-		cursorPos = cursorPos % cursorMax;
+
+	if (KeyRight.pressed())
+	{
+		KeyAccumulatedTime += Scene::DeltaTime();
+
+		if (KeyRight.down() || KeyAccumulatedTime >= 0.2) {
+
+			cursorPos++;
+			cursorPos = cursorPos % cursorMax;
+
+			KeyAccumulatedTime = 0;
+		}
 	}
+	else if (KeyLeft.pressed())
+	{
+		KeyAccumulatedTime += Scene::DeltaTime();
 
-	if (KeyLeft.down()) {
+		if (KeyLeft.down() || KeyAccumulatedTime >= 0.2) {
 
-		cursorPos--;
-		cursorPos = cursorPos % cursorMax;
+			cursorPos--;
+			cursorPos += cursorMax;
+			cursorPos = cursorPos % cursorMax;
+
+			KeyAccumulatedTime = 0;
+		}
 	}
-		
+	else KeyAccumulatedTime = 0;
+
+
 
 	for (size_t i = 0; i < ButtonTable.size(); ++i) {
 
@@ -38,8 +86,12 @@ void StageSelect::update()
 		{
 			switch (ButtonTable[i].response)
 			{
-			case normal :
-				Print << U"A";
+			case gotoGame:
+				Print << ButtonTable[i].StagePass;
+
+				getData().StagePass = ButtonTable[i].StagePass;
+				getData().StageNo = ButtonTable[i].StageNo;
+
 				break;
 
 			case endress :
@@ -102,7 +154,7 @@ void StageSelect::ButtonDraw(const RectF& rect, const Font& font_, const String&
 		if (Selected)
 		{
 			rect.draw(ColorF{ 0.3, 0.7, 1.0 });
-			rect.drawFrame(2, 2, ColorF{ 0.5, 0.8, 1.0 });
+			rect.drawFrame(2, 2, ColorF{ 0.6, 0.85, 1.0 });
 
 			font_(text).drawAt(30, (rect.x + rect.w / 2), (rect.y + rect.h / 2), ColorF{ 1 });
 		}

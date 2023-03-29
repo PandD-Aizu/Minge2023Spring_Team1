@@ -42,7 +42,7 @@ private:
 
 	enum ButtonResponse
 	{
-		normal,
+		gotoGame,
 		endress,
 		other
 	};
@@ -53,19 +53,28 @@ private:
 		Font font;
 		String text;
 		bool enabled;
+
 		ButtonResponse response;
+		String StagePass;
+		int StageNo;
+		String StageName;
 	};
 
+	/*
 	const Array<ButtonItem> ButtonTable = {
-		{Rect{ 50, 50, 100, 100 }, font, U"001",   true,  normal},
-		{Rect{ 800, 250, 100, 100 }, font, U"002", true,  endress},
+		{Rect{  50, 50, 100, 100 }, font, U"001",   true,  gotoGame},
+		{Rect{ 200, 50, 100, 100 }, font, U"002", true,  gotoGame},
+		{Rect{ 350, 50, 100, 100 }, font, U"003", true,  gotoGame},
+		{Rect{ 500, 50, 100, 100 }, font, U"004", true,  gotoGame},
 		{Rect{ 800, 400, 100, 100 }, font, U"予備",       false, other}
 	};
+	*/
 
+	Array<ButtonItem> ButtonTable;
 
 	size_t cursorPos = 0;
-	size_t cursorMax = ButtonTable.size();
-
+	size_t cursorMax;// = ButtonTable.size();
+	double KeyAccumulatedTime;
 
 
 	//ボタン関数
