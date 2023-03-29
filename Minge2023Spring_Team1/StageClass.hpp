@@ -8,6 +8,7 @@ public:
 		None,
 		Wall,
 		Target,
+		Box,
 	};
 	Array<Kind>& operator[](size_t y);
 	void operator<<(Array<Kind> row);

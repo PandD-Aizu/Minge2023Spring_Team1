@@ -53,6 +53,9 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 			case Tiles::Kind::Target:
 				Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
 				break;
+			case Tiles::Kind::Box:
+				box.draw(Palette::Rosybrown);
+				break;
 			}
 
 			// マスのフレームを描画
