@@ -154,18 +154,18 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		// 斜め反射壁（＼）
 		moveStatus = MoveStatus::AutoWalk; // 自動歩行
 		// 移動方向変更
-		switch (direction) {
+		switch (movingDirection) {
 		case Direction::Up:
-			direction = Direction::Left;
+			movingDirection = Direction::Left;
 			break;
 		case Direction::Down:
-			direction = Direction::Right;
+			movingDirection = Direction::Right;
 			break;
 		case Direction::Left:
-			direction = Direction::Up;
+			movingDirection = Direction::Up;
 			break;
 		case Direction::Right:
-			direction = Direction::Down;
+			movingDirection = Direction::Down;
 			break;
 		}
 		break;
@@ -173,18 +173,18 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		// 斜め反射壁（／）
 		moveStatus = MoveStatus::AutoWalk; // 自動歩行
 		// 移動方向変更
-		switch (direction) {
+		switch (movingDirection) {
 		case Direction::Up:
-			direction = Direction::Right;
+			movingDirection = Direction::Right;
 			break;
 		case Direction::Down:
-			direction = Direction::Left;
+			movingDirection = Direction::Left;
 			break;
 		case Direction::Left:
-			direction = Direction::Down;
+			movingDirection = Direction::Down;
 			break;
 		case Direction::Right:
-			direction = Direction::Up;
+			movingDirection = Direction::Up;
 			break;
 		}
 		break;
