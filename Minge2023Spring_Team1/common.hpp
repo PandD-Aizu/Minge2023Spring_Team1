@@ -11,6 +11,11 @@ enum class SceneList {
 // 共有するデータ
 struct GameData
 {
+	//ステージセレクト→ゲームへのデータ
+	//ステージのCSVのパス
+	String StagePass;
+	//ステージの番号
+	int StageNo;
 };
 
 using App = SceneManager<SceneList,GameData>;
