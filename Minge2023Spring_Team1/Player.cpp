@@ -141,16 +141,51 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	if (nextPos.x >= tiles[nextPos.y].size()) return MoveStatus::Failed;
 
 	// タイルチェック
-	if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Wall) {
+	switch (tiles[nextPos.y][nextPos.x]) {
+	case Tiles::Kind::Wall:
 		// 壁だった場合
 		// 移動せず終了
 		return MoveStatus::Failed;
-	}
-	else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
+	case Tiles::Kind::Target:
 		// ターゲットだった場合
 		// ターゲットを破壊して進む
 		tiles.breakTarget(nextPos);
 		if (tiles.getTargetNum() == 0) gameClearFlag = true;
+		break;
+	case Tiles::Kind::ReflectiveWallL:
+		moveStatus = MoveStatus::AutoWalk;
+		switch (direction) {
+		case Direction::Up:
+			direction = Direction::Left;
+			break;
+		case Direction::Down:
+			direction = Direction::Right;
+			break;
+		case Direction::Left:
+			direction = Direction::Up;
+			break;
+		case Direction::Right:
+			direction = Direction::Down;
+			break;
+		}
+		break;
+	case Tiles::Kind::ReflectiveWallR:
+		moveStatus = MoveStatus::AutoWalk;
+		switch (direction) {
+		case Direction::Up:
+			direction = Direction::Right;
+			break;
+		case Direction::Down:
+			direction = Direction::Left;
+			break;
+		case Direction::Left:
+			direction = Direction::Down;
+			break;
+		case Direction::Right:
+			direction = Direction::Up;
+			break;
+		}
+		break;
 	}
 
 	// 移動確定

@@ -63,6 +63,14 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				drawNone(box, j, i);
 				Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
 				break;
+			case Tiles::Kind::ReflectiveWallL:
+				drawNone(box, j, i);
+				box.scaled(0.8, 0.15).rotated(45_deg).draw(Palette::Purple);
+				break;
+			case Tiles::Kind::ReflectiveWallR:
+				drawNone(box, j, i);
+				box.scaled(0.8, 0.15).rotated(-45_deg).draw(Palette::Purple);
+				break;
 			}
 
 			// マスのフレームを描画

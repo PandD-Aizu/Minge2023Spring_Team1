@@ -2,7 +2,7 @@
 0,Wall,None,T,N,N,N,N
 N,N,N,W,N,N,N,N
 N,N,W,N,N,N,N,N
-N,N,N,2,2,N,N,N
+N,RR,N,2,2,N,RL,N
 N,N,N,2,N,N,N,N
 N,N,N,N,N,N,N,N
 N,N,N,N,N,N,N,N

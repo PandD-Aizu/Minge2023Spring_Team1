@@ -14,6 +14,8 @@ public:
 		None,
 		Wall,
 		Target,
+		ReflectiveWallL,
+		ReflectiveWallR,
 	};
 
 	Array<Kind>& operator[](size_t y);
@@ -89,8 +91,8 @@ public:
 	void draw(int, int, int, int) const;
 	/**
 	* @brief 移動する。次に移動すべき向きが戻り値で指定される。
-	* @param direction 移動方向（上:0 下:1 左:2 右:3）
-	* @return 次に移動する向き。壁があり移動できない場合はDirection::Noneが返される。
+	* @param[in,out] direction 移動方向（上:0 下:1 左:2 右:3）
+	* @return 処理結果 詳しくはMoveStatus参照
 	*/
 	MoveStatus move(Direction &direction);
 
