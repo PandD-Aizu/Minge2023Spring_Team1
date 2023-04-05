@@ -20,7 +20,7 @@ void Player::update() {
 		directionForDraw = direction;
 
 		if (!dashFlag && !autoWalkFlag) {
-			// ダッシュ移動中でない場合
+			// ダッシュ、自動歩行中でない場合
 			// 方向入力受付
 			if (inputUp.pressed()) direction = Direction::Up;
 			else if (inputDown.pressed()) direction = Direction::Down;
@@ -51,9 +51,7 @@ void Player::update() {
 
 			return;
 			// ↑↑↑方向キーを押した場合の処理↑↑↑　ここまで
-		}
-
-		if (dashFlag) {
+		} else if (dashFlag) {
 			// ダッシュ移動中の場合
 
 			// そのまま移動する
@@ -153,7 +151,9 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		if (tiles.getTargetNum() == 0) gameClearFlag = true;
 		break;
 	case Tiles::Kind::ReflectiveWallL:
-		moveStatus = MoveStatus::AutoWalk;
+		// 斜め反射壁（＼）
+		moveStatus = MoveStatus::AutoWalk; // 自動歩行
+		// 移動方向変更
 		switch (direction) {
 		case Direction::Up:
 			direction = Direction::Left;
@@ -170,7 +170,9 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		}
 		break;
 	case Tiles::Kind::ReflectiveWallR:
-		moveStatus = MoveStatus::AutoWalk;
+		// 斜め反射壁（／）
+		moveStatus = MoveStatus::AutoWalk; // 自動歩行
+		// 移動方向変更
 		switch (direction) {
 		case Direction::Up:
 			direction = Direction::Right;
