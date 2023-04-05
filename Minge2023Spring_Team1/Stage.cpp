@@ -7,6 +7,8 @@ Stage::Stage(const InitData& init)
 {
 	// CSVからtilesにデータを追加する
 	const CSV csv{ U"tiles.csv" };
+	//サンプルステージ作りました。ご活用ください。
+	//const CSV csv{ U"Test1.csv" };
 
 	if (not csv) // もし読み込みに失敗したら
 	{
