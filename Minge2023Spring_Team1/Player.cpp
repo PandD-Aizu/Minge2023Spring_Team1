@@ -1,6 +1,6 @@
 ﻿#include "StageClass.hpp"
 
-Player::Player(Tiles &tiles, Point position)
+Player::Player(Tiles& tiles, Point position)
 	: tiles{ tiles }, position{ position } {
 	delayTimer.setRemaining(0s);
 	delayTimer.start();
@@ -72,7 +72,7 @@ void Player::draw(int x1, int y1, int x2, int y2) const {
 	draw(Point{ x1, y1 }, Point{ x2, y2 });
 }
 
-Player::Direction Player::move(Direction movingDirection) {
+Direction Player::move(Direction movingDirection) {
 	// 移動前位置を記録
 	lastPosition = position;
 
@@ -96,6 +96,11 @@ Player::Direction Player::move(Direction movingDirection) {
 		// 移動せず終了
 		return Direction::None;
 	}
+	else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Box) {
+		if (not tiles.moveBox(nextPos.x, nextPos.y, movingDirection)) {
+			return Direction::None;
+		}
+	}
 	else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
 		// ターゲットだった場合
 		// ターゲットを破壊して進む
@@ -109,7 +114,7 @@ Player::Direction Player::move(Direction movingDirection) {
 	return movingDirection;
 }
 
-size_t Player::get_walk_count() const{
+size_t Player::get_walk_count() const {
 	return walk_count;
 }
 

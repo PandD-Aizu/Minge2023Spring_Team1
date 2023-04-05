@@ -1,6 +1,15 @@
 ﻿#pragma once
 #include"common.hpp"
 
+// 向き
+enum class Direction {
+	Up,
+	Down,
+	Left,
+	Right,
+	None
+};
+
 class Tiles {
 public:
 	// マスの種類
@@ -30,6 +39,11 @@ public:
 	// @return 正常に破壊できた場合trueを返す
 	bool breakTarget(Point position);
 
+
+	// @param 箱の移動方向
+	// @return 移動できたかを返す
+	bool moveBox(int,int,Direction);
+
 private:
 	Array<Array<Kind>> tiles;
 };
@@ -37,14 +51,6 @@ private:
 // プレイヤー
 class Player {
 public:
-	// 向き
-	enum class Direction {
-		Up,
-		Down,
-		Left,
-		Right,
-		None
-	};
 	/**
 	* @param tiles 盤面を参照するために必要
 	* @param position 初期位置

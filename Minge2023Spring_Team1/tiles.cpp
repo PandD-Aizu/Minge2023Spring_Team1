@@ -85,3 +85,35 @@ bool Tiles::breakTarget(Point position) {
 	}
 	return false;
 }
+
+bool Tiles::moveBox(int x, int y, Direction direction) {
+	if (tiles[y][x] != Kind::Box) {
+		return true;
+	}
+	Point new_pos(x, y);
+	switch (direction)
+	{
+	case Direction::Up:
+		new_pos.y--;
+		break;
+	case Direction::Down:
+		new_pos.y++;
+		break;
+	case Direction::Right:
+		new_pos.x++;
+		break;
+	case Direction::Left:
+		new_pos.x--;
+		break;
+	default:
+		break;
+	}
+
+	tiles[y][x] = Kind::None;
+	if (0>new_pos.x or new_pos.x >=width_size() or new_pos.y < 0 or new_pos.y >= size() or tiles[new_pos.y][new_pos.x] == Kind::Wall or tiles[new_pos.y][new_pos.x] == Kind::Box) {
+		return true;
+	}
+	tiles[new_pos.y][new_pos.x] = Kind::Box;
+
+	return true;
+}
