@@ -11,28 +11,28 @@ StageSelect::StageSelect(const InitData & init)
 	ButtonItem ArrItem;
 	String StagePass_;
 
-	for (size_t i = 0; i < 3; i++)
+	
+
+	for (size_t i = 0; i < 17; i++)
 	{
-		for (size_t j = 0; j < 7; j++) {
+		int y = i / 7;
+		int x = i % 7;
+		ArrItem.rect = Rect{ 100 + 150 * x, 50 + 150 * y, 100, 100 };
+		ArrItem.font = font;
+		ArrItem.text = U"{:0>3}"_fmt(i + 1);
+		ArrItem.enabled = true;
+		ArrItem.response = gotoGame;
 
-			//ArrItem = { Rect{ 50 + 150 * j, 50 + 150 * i, 100, 100 }, font, U"{:0>3}"_fmt( i * 7 + j + 1 ), true, gotoGame };
-			ArrItem.rect = Rect{ 100 + 150 * j, 50 + 150 * i, 100, 100 };
-			ArrItem.font = font;
-			ArrItem.text = U"{:0>3}"_fmt(i * 7 + j + 1);
-			ArrItem.enabled = true;
-			ArrItem.response = gotoGame;
+		ArrItem.StageNo = i + 1;
 
-			ArrItem.StageNo = i * 7 + j + 1;
+		StagePass_ = U"";
+		StagePass_ += U"{:0>3}"_fmt(i + 1);
+		StagePass_ += U".csv";
+		ArrItem.StagePass = StagePass_;
 
-			StagePass_ = U"";
-			StagePass_ += U"{:0>3}"_fmt(i * 7 + j + 1);
-			StagePass_ += U".csv";
-			ArrItem.StagePass = StagePass_;
-
-			ButtonTable << ArrItem;
-
-		}
+		ButtonTable << ArrItem;
 	}
+
 
 	ArrItem = { Rect{ 900, 550, 300, 100 }, font, U"予備", false, other };
 	ButtonTable << ArrItem;
@@ -47,11 +47,11 @@ void StageSelect::update()
 
 
 
-	if (KeyRight.pressed())
+	if (inputRight.pressed())
 	{
 		KeyAccumulatedTime += Scene::DeltaTime();
 
-		if (KeyRight.down() || KeyAccumulatedTime >= 0.3) {
+		if (inputRight.down() || KeyAccumulatedTime >= 0.3) {
 
 			cursorPos++;
 			cursorPos = cursorPos % cursorMax;
@@ -59,11 +59,11 @@ void StageSelect::update()
 			KeyAccumulatedTime = 0;
 		}
 	}
-	else if (KeyLeft.pressed())
+	else if (inputLeft.pressed())
 	{
 		KeyAccumulatedTime += Scene::DeltaTime();
 
-		if (KeyLeft.down() || KeyAccumulatedTime >= 0.3) {
+		if (inputLeft.down() || KeyAccumulatedTime >= 0.3) {
 
 			cursorPos--;
 			cursorPos += cursorMax;
@@ -118,8 +118,6 @@ void StageSelect::draw() const
 	}
 }
 
-
-
 //ボタン関数
 bool StageSelect::ButtonClicked(const RectF& rect, bool enabled)
 {
@@ -173,5 +171,3 @@ void StageSelect::ButtonDraw(const RectF& rect, const Font& font_, const String&
 		font_(text).drawAt(30, (rect.x + rect.w / 2), (rect.y + rect.h / 2), ColorF{ 0.7 });
 	}
 }
-
-
