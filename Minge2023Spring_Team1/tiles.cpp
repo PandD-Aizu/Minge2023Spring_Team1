@@ -40,7 +40,7 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 	for (int i = 0; i < tiles.size(); i++) {
 		for (int j = 0; j < tiles[i].size(); j++) {
 			// マスの作成
-			RectF box((Vec2)left_upper+Vec2(j*block_size,i*block_size),block_size);
+			RectF box((Vec2)left_upper + Vec2(j * block_size, i * block_size), block_size);
 
 			// マスの種類によって描画を変える
 			switch (tiles[i][j]) {
@@ -87,9 +87,15 @@ bool Tiles::breakTarget(Point position) {
 }
 
 bool Tiles::moveBox(int x, int y, Direction direction) {
-	if (tiles[y][x] != Kind::Box) {
+	// 走り出しの時に箱が隣接していなかった場合は、プレイヤーは止まる
+	if (adjacent_flag == false) {
+		return false;
+	}
+
+	if (tiles[y][x] != Kind::Box) { // 安全対策
 		return true;
 	}
+
 	Point new_pos(x, y);
 	switch (direction)
 	{
@@ -109,11 +115,40 @@ bool Tiles::moveBox(int x, int y, Direction direction) {
 		break;
 	}
 
+	// 現在の箱を消す
 	tiles[y][x] = Kind::None;
-	if (0>new_pos.x or new_pos.x >=width_size() or new_pos.y < 0 or new_pos.y >= size() or tiles[new_pos.y][new_pos.x] == Kind::Wall or tiles[new_pos.y][new_pos.x] == Kind::Box) {
+
+	// 箱の新しい位置が壁か別の箱ならば、箱を消す
+	if (0 > new_pos.x or new_pos.x >= width_size() or new_pos.y < 0 or new_pos.y >= size() or tiles[new_pos.y][new_pos.x] == Kind::Wall or tiles[new_pos.y][new_pos.x] == Kind::Box) {
+		adjacent_flag = false;
 		return true;
 	}
+
+	// 新しい位置に箱を生やす
 	tiles[new_pos.y][new_pos.x] = Kind::Box;
 
 	return true;
+}
+
+void Tiles::setAdjacentFlag(Point pos, Direction direction) {
+	switch (direction)
+	{
+	case Direction::Up:
+		pos.y--;
+		break;
+	case Direction::Down:
+		pos.y++;
+		break;
+	case Direction::Right:
+		pos.x++;
+		break;
+	case Direction::Left:
+		pos.x--;
+		break;
+	}
+
+
+	if (tiles[pos.y][pos.x] == Kind::Box) {
+		adjacent_flag = true;
+	}
 }

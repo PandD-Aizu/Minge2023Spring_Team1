@@ -41,11 +41,18 @@ public:
 
 
 	// @param 箱の移動方向
-	// @return 移動できたかを返す
-	bool moveBox(int,int,Direction);
+	// @return プレイヤーが移動可能かを返す
+	bool moveBox(int, int, Direction);
+
+	// @brief 箱とプレイヤーが隣接してたらフラグをtrueにする
+	// @param プレイヤーの位置と移動方向
+	void setAdjacentFlag(Point, Direction);
 
 private:
 	Array<Array<Kind>> tiles;
+
+	// 箱とプレイヤーが隣接しているかのフラグ
+	bool adjacent_flag = false;
 };
 
 // プレイヤー
@@ -55,7 +62,7 @@ public:
 	* @param tiles 盤面を参照するために必要
 	* @param position 初期位置
 	*/
-	Player(Tiles &tiles, Point position);
+	Player(Tiles& tiles, Point position);
 
 	// 毎フレーム呼ぶ
 	void update();
@@ -95,7 +102,7 @@ private:
 	bool dashFlag = false;
 
 	// 歩行回数
-	size_t walk_count=0;
+	size_t walk_count = 0;
 
 	// ゲームクリア時にtrue
 	bool gameClearFlag = false;

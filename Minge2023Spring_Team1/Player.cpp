@@ -18,6 +18,8 @@ void Player::update() {
 			else return; // 移動キーを押さなかった場合はここで処理終了
 
 			// ↓↓↓方向キーを押した場合の処理↓↓↓
+			tiles.setAdjacentFlag(position, direction); // プレイヤーと箱が隣接しているのかの判定
+
 			if (KeyShift.pressed()) {
 				// ダッシュ移動開始
 				dashFlag = true;
