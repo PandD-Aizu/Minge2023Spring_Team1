@@ -195,4 +195,7 @@ void Tiles::setAdjacentFlag(Point pos, Direction direction) {
 	if (0 <= pos.y and pos.y < size() and 0 <= pos.x and pos.x < width_size() and tiles[pos.y][pos.x] == Kind::Box) {
 		adjacent_flag = true;
 	}
+	else {
+		adjacent_flag = false;
+	}
 }
