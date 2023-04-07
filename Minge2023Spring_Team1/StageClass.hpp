@@ -16,6 +16,7 @@ public:
 		Target,
 		ReflectiveWallL,
 		ReflectiveWallR,
+		WarpHole,
 	};
 
 	Array<Kind>& operator[](size_t y);
@@ -38,6 +39,11 @@ public:
 
 	// @brief 残っているターゲットの数を返す
 	int32 getTargetNum() const;
+
+	// @brief もう一つのワープホールの位置を返す
+	// @param position 検索から除外するワープホールの位置
+	// @return ワープホールの位置
+	Point getAnotherWarpHolePos(Point position);
 
 	// @brief 指定位置にあるターゲットを破壊する
 	// @param position 対象ターゲットの位置

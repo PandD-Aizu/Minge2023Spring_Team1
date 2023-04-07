@@ -121,6 +121,11 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	// 戻り値
 	MoveStatus moveStatus = MoveStatus::None;
 
+	// 床がワープホールだった場合のワープ処理
+	if (tiles[position.y][position.x] == Tiles::Kind::WarpHole) {
+		position = tiles.getAnotherWarpHolePos(position);
+	}
+
 	// 移動前位置を記録
 	lastPosition = position;
 
@@ -187,6 +192,10 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 			movingDirection = Direction::Up;
 			break;
 		}
+		break;
+	case Tiles::Kind::WarpHole:
+		// ワープホール
+		moveStatus = MoveStatus::AutoWalk; // 自動歩行
 		break;
 	}
 
