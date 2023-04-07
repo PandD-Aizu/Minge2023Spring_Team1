@@ -32,6 +32,8 @@ void Player::update() {
 			directionForDraw = direction;
 
 			// ↓↓↓方向キーを押した場合の処理↓↓↓
+			tiles.setAdjacentFlag(position, direction); // プレイヤーと箱が隣接しているのかの判定
+
 			if (KeyShift.pressed()) {
 				// ダッシュ移動開始
 				dashFlag = true;
@@ -155,6 +157,11 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		tiles.breakTarget(nextPos);
 		if (tiles.getTargetNum() == 0) gameClearFlag = true;
 		break;
+	case Tiles::Kind::Box:
+		if (not tiles.moveBox(nextPos.x, nextPos.y, movingDirection)) {
+			return MoveStatus::Failed;
+		}
+		break;
 	case Tiles::Kind::ReflectiveWallL:
 		// 斜め反射壁（＼）
 		moveStatus = MoveStatus::AutoWalk; // 自動歩行
@@ -205,7 +212,7 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	return moveStatus;
 }
 
-size_t Player::get_walk_count() const{
+size_t Player::get_walk_count() const {
 	return walk_count;
 }
 

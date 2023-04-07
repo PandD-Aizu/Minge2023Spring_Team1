@@ -1,6 +1,15 @@
 ﻿#pragma once
 #include"common.hpp"
 
+// 向き
+enum class Direction {
+	Up,
+	Down,
+	Left,
+	Right,
+	None
+};
+
 class Tiles {
 public:
 	// @param stage_number ステージ番号
@@ -14,6 +23,7 @@ public:
 		None,
 		Wall,
 		Target,
+		Box,
 		ReflectiveWallL,
 		ReflectiveWallR,
 		WarpHole,
@@ -50,9 +60,20 @@ public:
 	// @return 正常に破壊できた場合trueを返す
 	bool breakTarget(Point position);
 
+
+	// @param 箱の移動方向
+	// @return プレイヤーが移動可能かを返す
+	bool moveBox(int, int, Direction);
+
+	// @brief 箱とプレイヤーが隣接してたらフラグをtrueにする
+	// @param プレイヤーの位置と移動方向
+	void setAdjacentFlag(Point, Direction);
+
 private:
 	Array<Array<Kind>> tiles;
 
+	// 箱とプレイヤーが隣接しているかのフラグ
+	bool adjacent_flag = false;
 	// @breif 何もないフィールドの描画
 	void drawNone(RectF,int,int) const;
 
@@ -69,14 +90,6 @@ private:
 // プレイヤー
 class Player {
 public:
-	// 向き
-	enum class Direction {
-		Up = 0,
-		Down = 1,
-		Left = 2,
-		Right = 3,
-		None
-	};
 	enum class MoveStatus {
 		None, // 正常に終了
 		AutoWalk, // 自動的にもう一度移動する
@@ -86,7 +99,7 @@ public:
 	* @param tiles 盤面を参照するために必要
 	* @param position 初期位置
 	*/
-	Player(Tiles &tiles, Point position);
+	Player(Tiles& tiles, Point position);
 
 	// 毎フレーム呼ぶ
 	void update();
@@ -130,7 +143,7 @@ private:
 	bool autoWalkFlag = false;
 
 	// 歩行回数
-	size_t walk_count=0;
+	size_t walk_count = 0;
 
 	// ゲームクリア時にtrue
 	bool gameClearFlag = false;
