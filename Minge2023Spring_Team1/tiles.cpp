@@ -163,7 +163,7 @@ bool Tiles::moveBox(int x, int y, Direction direction) {
 	tiles[y][x] = Kind::None;
 
 	// 箱の新しい位置が壁か別の箱ならば、箱を消す
-	if (0 > new_pos.x or new_pos.x >= width_size() or new_pos.y < 0 or new_pos.y >= size() or tiles[new_pos.y][new_pos.x] == Kind::Wall or tiles[new_pos.y][new_pos.x] == Kind::Box) {
+	if (0 > new_pos.x or new_pos.x >= width_size() or new_pos.y < 0 or new_pos.y >= size() or (tiles[new_pos.y][new_pos.x] != Kind::Target and tiles[new_pos.y][new_pos.x] != Kind::None)) {
 		adjacent_flag = false;
 		return true;
 	}
