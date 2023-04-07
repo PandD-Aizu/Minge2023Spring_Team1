@@ -123,21 +123,47 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	// 戻り値
 	MoveStatus moveStatus = MoveStatus::None;
 
-	// 床がワープホールだった場合のワープ処理
-	if (tiles[position.y][position.x] == Tiles::Kind::WarpHole) {
-		position = tiles.getAnotherWarpHolePos(position);
-	}
-
-	// 移動前位置を記録
-	lastPosition = position;
-
 	// 進行方向
 	Point deltaPos;
 	if (movingDirection == Direction::Up) deltaPos = { 0, -1 };
 	else if (movingDirection == Direction::Down) deltaPos = { 0, 1 };
 	else if (movingDirection == Direction::Left) deltaPos = { -1, 0 };
 	else if (movingDirection == Direction::Right) deltaPos = { 1, 0 };
-	else return MoveStatus::Failed;
+	else throw Error{ U"movingDirection引数にDirection::Noneを渡した場合の処理は未定義です" };
+
+	// 床がワープホールだった場合のワープ処理
+	if (tiles[position.y][position.x] == Tiles::Kind::WarpHole) {
+		Point destinationPos = tiles.getAnotherWarpHolePos(position);
+		switch (tiles[(destinationPos + deltaPos).y][(destinationPos + deltaPos).x]) {
+		case Tiles::Kind::Box:
+		case Tiles::Kind::Wall:
+			// ワープ先が塞がれていて移動できない場合、ワープできずに戻される
+			deltaPos = -deltaPos;
+			switch (movingDirection) {
+			case Direction::Up:
+				movingDirection = Direction::Down;
+				break;
+			case Direction::Down:
+				movingDirection = Direction::Up;
+				break;
+			case Direction::Left:
+				movingDirection = Direction::Right;
+				break;
+			case Direction::Right:
+				movingDirection = Direction::Left;
+				break;
+			}
+			break;
+		default:
+			// ワープ可能な場合、ワープする
+			position = destinationPos;
+		}
+	}
+
+	// 移動前位置を記録
+	lastPosition = position;
+
+
 
 	Point nextPos = position + deltaPos;
 
