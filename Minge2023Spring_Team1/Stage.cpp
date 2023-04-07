@@ -29,6 +29,12 @@ Stage::Stage(const InitData& init)
 			else if (v == U"2" or v == U"T" or v == U"Target") {
 				x << Tiles::Kind::Target;
 			}
+			else if (v == U"5" or v == U"RL" or v == U"RefWallL") {
+				x << Tiles::Kind::ReflectiveWallL;
+			}
+			else if (v == U"6" or v == U"RR" or v == U"RefWallR") {
+				x << Tiles::Kind::ReflectiveWallR;
+			}
 			else {
 				throw Error{ U"csvに変なモノ({})が混じっています"_fmt(v) };
 			}

@@ -19,8 +19,8 @@ void Player::update() {
 		// 移動処理が終わったら描画上の向きも更新
 		directionForDraw = direction;
 
-		if (!dashFlag) {
-			// ダッシュ移動中でない場合
+		if (!dashFlag && !autoWalkFlag) {
+			// ダッシュ、自動歩行中でない場合
 			// 方向入力受付
 			if (inputUp.pressed()) direction = Direction::Up;
 			else if (inputDown.pressed()) direction = Direction::Down;
@@ -38,7 +38,9 @@ void Player::update() {
 			}
 			else {
 				// 通常歩行処理
-				if (move(direction) != Direction::None) {
+				MoveStatus moveStatus = move(direction);
+				if (moveStatus != MoveStatus::Failed) {
+					if (moveStatus == MoveStatus::AutoWalk) autoWalkFlag = true;
 					// 進行方向に壁がなく移動に成功した場合
 					walk_count++;
 					// 行動遅延設定
@@ -46,18 +48,17 @@ void Player::update() {
 					delayTimer.start();
 				}
 			}
-			// ↑↑↑方向キーを押した場合の処理↑↑↑　ここまで
-		}
 
-		if (dashFlag) {
+			return;
+			// ↑↑↑方向キーを押した場合の処理↑↑↑　ここまで
+		} else if (dashFlag) {
 			// ダッシュ移動中の場合
 
 			// そのまま移動する
-			Direction nextDirection = move(direction);
+			MoveStatus moveStatus = move(direction);
 
-			if (nextDirection != Direction::None) {
+			if (moveStatus != MoveStatus::Failed) {
 				// 移動できた場合
-				direction = nextDirection;
 				// 行動遅延設定
 				delayTimer.set(DASHING_DELAY);
 				delayTimer.start();
@@ -65,6 +66,27 @@ void Player::update() {
 			else {
 				// 移動できなかった場合、ダッシュ移動を終了する
 				dashFlag = false;
+			}
+		}
+		else if (autoWalkFlag) {
+			// 自動歩行中の場合
+
+			// そのまま移動する
+			MoveStatus moveStatus = move(direction);
+
+			autoWalkFlag = false;
+
+			if (moveStatus != MoveStatus::Failed) {
+				// 移動できた場合
+				// 自動歩行継続判定
+				if (moveStatus == MoveStatus::AutoWalk) autoWalkFlag = true;
+				// 行動遅延設定
+				delayTimer.set(WALKING_DELAY);
+				delayTimer.start();
+			}
+			else {
+				// 移動できなかった場合、自動歩行を終了する
+				autoWalkFlag = false;
 			}
 		}
 	}
@@ -95,7 +117,10 @@ void Player::draw(int x1, int y1, int x2, int y2) const {
 	draw(Point{ x1, y1 }, Point{ x2, y2 });
 }
 
-Player::Direction Player::move(Direction movingDirection) {
+Player::MoveStatus Player::move(Direction &movingDirection) {
+	// 戻り値
+	MoveStatus moveStatus = MoveStatus::None;
+
 	// 移動前位置を記録
 	lastPosition = position;
 
@@ -105,31 +130,70 @@ Player::Direction Player::move(Direction movingDirection) {
 	else if (movingDirection == Direction::Down) deltaPos = { 0, 1 };
 	else if (movingDirection == Direction::Left) deltaPos = { -1, 0 };
 	else if (movingDirection == Direction::Right) deltaPos = { 1, 0 };
-	else return Direction::None;
+	else return MoveStatus::Failed;
 
 	Point nextPos = position + deltaPos;
 
 	// 盤上範囲内チェック
-	if (nextPos.x < 0 || nextPos.y < 0 || nextPos.y >= tiles.size()) return Direction::None;
-	if (nextPos.x >= tiles[nextPos.y].size()) return Direction::None;
+	if (nextPos.x < 0 || nextPos.y < 0 || nextPos.y >= tiles.size()) return MoveStatus::Failed;
+	if (nextPos.x >= tiles[nextPos.y].size()) return MoveStatus::Failed;
 
 	// タイルチェック
-	if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Wall) {
+	switch (tiles[nextPos.y][nextPos.x]) {
+	case Tiles::Kind::Wall:
 		// 壁だった場合
 		// 移動せず終了
-		return Direction::None;
-	}
-	else if (tiles[nextPos.y][nextPos.x] == Tiles::Kind::Target) {
+		return MoveStatus::Failed;
+	case Tiles::Kind::Target:
 		// ターゲットだった場合
 		// ターゲットを破壊して進む
 		tiles.breakTarget(nextPos);
 		if (tiles.getTargetNum() == 0) gameClearFlag = true;
+		break;
+	case Tiles::Kind::ReflectiveWallL:
+		// 斜め反射壁（＼）
+		moveStatus = MoveStatus::AutoWalk; // 自動歩行
+		// 移動方向変更
+		switch (movingDirection) {
+		case Direction::Up:
+			movingDirection = Direction::Left;
+			break;
+		case Direction::Down:
+			movingDirection = Direction::Right;
+			break;
+		case Direction::Left:
+			movingDirection = Direction::Up;
+			break;
+		case Direction::Right:
+			movingDirection = Direction::Down;
+			break;
+		}
+		break;
+	case Tiles::Kind::ReflectiveWallR:
+		// 斜め反射壁（／）
+		moveStatus = MoveStatus::AutoWalk; // 自動歩行
+		// 移動方向変更
+		switch (movingDirection) {
+		case Direction::Up:
+			movingDirection = Direction::Right;
+			break;
+		case Direction::Down:
+			movingDirection = Direction::Left;
+			break;
+		case Direction::Left:
+			movingDirection = Direction::Down;
+			break;
+		case Direction::Right:
+			movingDirection = Direction::Up;
+			break;
+		}
+		break;
 	}
 
 	// 移動確定
 	position = nextPos;
 
-	return movingDirection;
+	return moveStatus;
 }
 
 size_t Player::get_walk_count() const{
