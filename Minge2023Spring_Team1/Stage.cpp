@@ -29,6 +29,9 @@ Stage::Stage(const InitData& init)
 			else if (v == U"2" or v == U"T" or v == U"Target") {
 				x << Tiles::Kind::Target;
 			}
+			else if (v == U"3" or v == U"B" or v == U"Box") {
+				x << Tiles::Kind::Box;
+			}
 			else if (v == U"5" or v == U"RL" or v == U"RefWallL") {
 				x << Tiles::Kind::ReflectiveWallL;
 			}

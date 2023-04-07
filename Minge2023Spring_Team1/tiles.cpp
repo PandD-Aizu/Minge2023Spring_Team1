@@ -63,6 +63,9 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				drawNone(box, j, i);
 				Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
 				break;
+			case Tiles::Kind::Box:
+				box.draw(Palette::Rosybrown);
+				break;
 			case Tiles::Kind::ReflectiveWallL:
 				drawNone(box, j, i);
 				box.scaled(0.8, 0.15).rotated(45_deg).draw(Palette::Purple);
@@ -125,4 +128,74 @@ bool Tiles::breakTarget(Point position) {
 		return true;
 	}
 	return false;
+}
+
+bool Tiles::moveBox(int x, int y, Direction direction) {
+	// 走り出しの時に箱が隣接していなかった場合は、プレイヤーは止まる
+	if (adjacent_flag == false) {
+		return false;
+	}
+
+	if (tiles[y][x] != Kind::Box) { // 安全対策
+		return true;
+	}
+
+	Point new_pos(x, y);
+	switch (direction)
+	{
+	case Direction::Up:
+		new_pos.y--;
+		break;
+	case Direction::Down:
+		new_pos.y++;
+		break;
+	case Direction::Right:
+		new_pos.x++;
+		break;
+	case Direction::Left:
+		new_pos.x--;
+		break;
+	default:
+		break;
+	}
+
+	// 現在の箱を消す
+	tiles[y][x] = Kind::None;
+
+	// 箱の新しい位置が壁か別の箱ならば、箱を消す
+	if (0 > new_pos.x or new_pos.x >= width_size() or new_pos.y < 0 or new_pos.y >= size() or (tiles[new_pos.y][new_pos.x] != Kind::Target and tiles[new_pos.y][new_pos.x] != Kind::None)) {
+		adjacent_flag = false;
+		return true;
+	}
+
+	// 新しい位置に箱を生やす
+	tiles[new_pos.y][new_pos.x] = Kind::Box;
+
+	return true;
+}
+
+void Tiles::setAdjacentFlag(Point pos, Direction direction) {
+	switch (direction)
+	{
+	case Direction::Up:
+		pos.y--;
+		break;
+	case Direction::Down:
+		pos.y++;
+		break;
+	case Direction::Right:
+		pos.x++;
+		break;
+	case Direction::Left:
+		pos.x--;
+		break;
+	}
+
+
+	if (0 <= pos.y and pos.y < size() and 0 <= pos.x and pos.x < width_size() and tiles[pos.y][pos.x] == Kind::Box) {
+		adjacent_flag = true;
+	}
+	else {
+		adjacent_flag = false;
+	}
 }
