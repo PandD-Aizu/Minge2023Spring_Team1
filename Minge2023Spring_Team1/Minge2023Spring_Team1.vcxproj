@@ -113,6 +113,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EndlessStage.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="tiles.cpp" />
     <ClCompile Include="common.cpp" />
