@@ -52,7 +52,7 @@ public:
 	// 描画関数（オプション）
 	void draw() const override;
 private:
-	Stopwatch clear_time;
+	Timer timeLimit{ 0.1min };
 
 	Tiles tiles;
 	Player player;

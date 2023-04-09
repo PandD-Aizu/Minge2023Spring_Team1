@@ -44,19 +44,14 @@ EndlessStage::EndlessStage(const InitData& init)
 		}
 		tiles << x;
 	}
-	clear_time.restart();
+	timeLimit.restart();
 }
 
 // 更新関数
 void EndlessStage::update()
 {
-	// ゲームクリア時
-	if (player.isGameCleared()) {
-		// クリアタイムが動いていたら止める
-		if (clear_time.isRunning()) {
-			clear_time.pause();
-		}
-
+	// ゲームオーバー時
+	if (timeLimit.reachedZero()) {
 		// シフトを押したらシーンをステージセレクトに戻す
 		if (KeyShift.down()) {
 			changeScene(SceneList::StageSelect);
@@ -81,11 +76,11 @@ void EndlessStage::draw() const
 	player.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
 
 	const int score_x_pos = Scene::Center().x + tiles_size / 2 + 120;
-	font(clear_time.format(U"MM:ss.xx")).drawAt(score_x_pos, 50);
+	font(timeLimit.format(U"MM:ss.xx")).drawAt(score_x_pos, 50);
 	font(U"歩行:{}回"_fmt(player.get_walk_count())).drawAt(score_x_pos, 100);
 
-	if (player.isGameCleared()) {
-		// ゲームクリア時の表示
+	if (timeLimit.reachedZero()) {
+		// ゲームオーバー時の表示
 
 		RectF transparent{ 0, 0, Scene::Width(), Scene::Height() }; // ゲーム画面を透過するRectF
 		RectF score_board{ Arg::center(transparent.center()),Scene::Width() * 0.6, Scene::Height() * 0.6 };
@@ -93,8 +88,7 @@ void EndlessStage::draw() const
 		transparent.draw(ColorF{ Palette::Gray, 0.8 });
 		score_board.draw(Palette::White);
 
-		auto pos = font_gameClear(U"GAME CLEAR!!").draw(Arg::topCenter = score_board.topCenter(), Palette::Yellow);
-		pos = font_score(U"クリアタイム: {}"_fmt(clear_time.format(U"MM:ss.xx"))).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // クリアタイムの表示
+		auto pos = font_gameClear(U"GAME OVER").draw(Arg::topCenter = score_board.topCenter(), Palette::Yellow);
 		pos = font_score(U"歩行回数: {}回"_fmt(player.get_walk_count())).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // 歩行回数の表示
 		pos = font_score(U"スコア: {}"_fmt(U"hoge")).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // スコアの表示
 		font_score(U"SHIFTキーでステージセレクトへ").draw(Arg::bottomCenter = score_board.bottomCenter(), Palette::Black);
