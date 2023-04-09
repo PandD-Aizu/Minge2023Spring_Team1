@@ -61,23 +61,44 @@ void EndlessStage::update()
 
 	// ゲームプレイ時
 	player.update();
+
+	// イベント処理
+	for (GameEvent e = tiles.popEventQueue(); e != GameEvent::None; e = tiles.popEventQueue()) {
+		switch (e) {
+		case GameEvent::BreakTarget:
+			timeLimit.setRemaining(timeLimit.remaining() + TIMER_INCREASE_BREAK_TARGET);
+			break;
+		case GameEvent::BreakBox:
+			timeLimit.setRemaining(timeLimit.remaining() + TIMER_INCREASE_BREAK_BOX);
+			break;
+		}
+	}
 }
 
 // 描画関数   
 void EndlessStage::draw() const
 {
 	static Font font(40);
-	static int margin = 30, tiles_size = Scene::Height() - margin * 2;
+	static int timeBarHeight = 20;
+	static int margin = 30, tiles_size = Scene::Height() - margin * 2 - timeBarHeight;
 	static Font font_gameClear{ 85, Typeface::Bold };
 	static Font font_score{ 50 };
 
-	tiles.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
+	tiles.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin - timeBarHeight);
 
-	player.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin);
+	player.draw(Scene::Center().x - tiles_size / 2, margin, Scene::Center().x + tiles_size / 2, Scene::Height() - margin - timeBarHeight);
 
 	const int score_x_pos = Scene::Center().x + tiles_size / 2 + 120;
 	font(timeLimit.format(U"MM:ss.xx")).drawAt(score_x_pos, 50);
 	font(U"歩行:{}回"_fmt(player.get_walk_count())).drawAt(score_x_pos, 100);
+
+	// 画面下カウントダウンバーの描画
+	double timeRatio = timeLimit.remaining() / 1min;
+	RectF timeBar{
+		0, Scene::Height() - timeBarHeight,
+		Scene::Width() * timeRatio, Scene::Height()
+	};
+	timeBar.draw(HSV{ timeRatio < 1 ? 120 * timeRatio : 120, 1, 1});
 
 	if (timeLimit.reachedZero()) {
 		// ゲームオーバー時の表示

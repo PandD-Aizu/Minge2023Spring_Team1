@@ -125,6 +125,8 @@ int32 Tiles::getTargetNum() const {
 bool Tiles::breakTarget(Point position) {
 	if (tiles[position.y][position.x] == Tiles::Kind::Target) {
 		tiles[position.y][position.x] = Tiles::Kind::None;
+		// ターゲットの破壊に成功
+		eventQueue << GameEvent::BreakTarget;
 		return true;
 	}
 	return false;
@@ -165,7 +167,12 @@ bool Tiles::moveBox(int x, int y, Direction direction) {
 	// 箱の新しい位置が壁か別の箱ならば、箱を消す
 	if (0 > new_pos.x or new_pos.x >= width_size() or new_pos.y < 0 or new_pos.y >= size() or (tiles[new_pos.y][new_pos.x] != Kind::Target and tiles[new_pos.y][new_pos.x] != Kind::None)) {
 		adjacent_flag = false;
+		eventQueue << GameEvent::BreakBox;
 		return true;
+	}
+	else if (tiles[new_pos.y][new_pos.x] == Kind::Target) {
+		// 箱の移動先にターゲットがあったら破壊する
+		breakTarget(new_pos);
 	}
 
 	// 新しい位置に箱を生やす
@@ -197,5 +204,14 @@ void Tiles::setAdjacentFlag(Point pos, Direction direction) {
 	}
 	else {
 		adjacent_flag = false;
+	}
+}
+
+GameEvent Tiles::popEventQueue() {
+	if (eventQueue.isEmpty()) return GameEvent::None;
+	else {
+		GameEvent gameEvent = eventQueue.front();
+		eventQueue.pop_front();
+		return gameEvent;
 	}
 }
