@@ -5,6 +5,7 @@
 enum class SceneList {
 	Title,
 	Stage,
+	EndlessStage,
 	StageSelect
 };
 

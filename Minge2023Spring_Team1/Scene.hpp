@@ -39,6 +39,25 @@ private:
 	Player player;
 };
 
+class EndlessStage : public App::Scene
+{
+public:
+
+	// コンストラクタ（必ず実装）
+	EndlessStage(const InitData& init);
+
+	// 更新関数（オプション）
+	void update() override;
+
+	// 描画関数（オプション）
+	void draw() const override;
+private:
+	Stopwatch clear_time;
+
+	Tiles tiles;
+	Player player;
+};
+
 class StageSelect : public App::Scene
 {
 private:
