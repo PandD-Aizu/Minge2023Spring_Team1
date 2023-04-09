@@ -135,9 +135,9 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	if (warpIsEnabled && tiles[position.y][position.x] == Tiles::Kind::WarpHole) {
 		Point destinationPos = tiles.getAnotherWarpHolePos(position);
 		position = destinationPos;
-		warpIsEnabled = false;
+		warpIsEnabled = false; // ワープ先でもう一度移動するまでワープを無効にする
 
-		if (!dashFlag) tiles.setAdjacentFlag(position, movingDirection);
+		if (!dashFlag) tiles.setAdjacentFlag(position, movingDirection); // ダッシュしていなかったら、箱隣接判定をリセットする
 	}
 
 	// 移動前位置を記録
@@ -209,6 +209,7 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		break;
 	case Tiles::Kind::WarpHole:
 		// ワープホール
+		// 一旦自動歩行させて、ワープタイルの真上に来てから処理する（次の移動で処理する）
 		moveStatus = MoveStatus::AutoWalk; // 自動歩行
 		break;
 	}
