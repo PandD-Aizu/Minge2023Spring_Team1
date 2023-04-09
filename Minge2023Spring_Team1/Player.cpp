@@ -132,32 +132,12 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	else throw Error{ U"movingDirection引数にDirection::Noneを渡した場合の処理は未定義です" };
 
 	// 床がワープホールだった場合のワープ処理
-	if (tiles[position.y][position.x] == Tiles::Kind::WarpHole) {
+	if (warpIsEnabled && tiles[position.y][position.x] == Tiles::Kind::WarpHole) {
 		Point destinationPos = tiles.getAnotherWarpHolePos(position);
-		switch (tiles[(destinationPos + deltaPos).y][(destinationPos + deltaPos).x]) {
-		case Tiles::Kind::Box:
-		case Tiles::Kind::Wall:
-			// ワープ先が塞がれていて移動できない場合、ワープできずに戻される
-			deltaPos = -deltaPos;
-			switch (movingDirection) {
-			case Direction::Up:
-				movingDirection = Direction::Down;
-				break;
-			case Direction::Down:
-				movingDirection = Direction::Up;
-				break;
-			case Direction::Left:
-				movingDirection = Direction::Right;
-				break;
-			case Direction::Right:
-				movingDirection = Direction::Left;
-				break;
-			}
-			break;
-		default:
-			// ワープ可能な場合、ワープする
-			position = destinationPos;
-		}
+		position = destinationPos;
+		warpIsEnabled = false;
+
+		if (!dashFlag) tiles.setAdjacentFlag(position, movingDirection);
 	}
 
 	// 移動前位置を記録
@@ -176,7 +156,8 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	case Tiles::Kind::Wall:
 		// 壁だった場合
 		// 移動せず終了
-		return MoveStatus::Failed;
+		moveStatus = MoveStatus::Failed;
+		break;
 	case Tiles::Kind::Target:
 		// ターゲットだった場合
 		// ターゲットを破壊して進む
@@ -185,7 +166,7 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		break;
 	case Tiles::Kind::Box:
 		if (not tiles.moveBox(nextPos.x, nextPos.y, movingDirection)) {
-			return MoveStatus::Failed;
+			moveStatus = MoveStatus::Failed;
 		}
 		break;
 	case Tiles::Kind::ReflectiveWallL:
@@ -232,8 +213,11 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		break;
 	}
 
-	// 移動確定
-	position = nextPos;
+	if (moveStatus != MoveStatus::Failed) {
+		// 移動確定
+		position = nextPos;
+		warpIsEnabled = true;
+	}
 
 	return moveStatus;
 }

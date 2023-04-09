@@ -141,6 +141,8 @@ private:
 	bool dashFlag = false;
 	// 自動歩行中true
 	bool autoWalkFlag = false;
+	// ワープ可能な状態か（ワープ直後にfalse）
+	bool warpIsEnabled = true;
 
 	// 歩行回数
 	size_t walk_count = 0;
