@@ -157,6 +157,13 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 			return MoveStatus::Failed;
 		}
 		break;
+	case Tiles::Kind::Rock1:
+	case Tiles::Kind::Rock2:
+	case Tiles::Kind::Rock3:
+		if (not tiles.moveRock(nextPos.x, nextPos.y, movingDirection)) {
+			return MoveStatus::Failed;
+		}
+		break;
 	case Tiles::Kind::ReflectiveWallL:
 		// 斜め反射壁（＼）
 		moveStatus = MoveStatus::AutoWalk; // 自動歩行

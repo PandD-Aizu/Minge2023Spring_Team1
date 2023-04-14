@@ -1,8 +1,8 @@
 0,1,,Target,N,N,N,N
 0,Wall,None,T,N,N,N,N
-N,N,N,W,B,N,3,N
+N,N,N,W,R,N,3,N
 N,N,W,N,N,N,N,N
 N,N,RR,2,2,N,RL,N
-B,Box,N,2,N,N,N,N
-B,Wall,B,N,B,N,N,N
+B,Box,N,2,N,N,Rock,N
+B,Wall,B,N,B,N,Rock,N
 T,Wall,N,N,N,N,N,N

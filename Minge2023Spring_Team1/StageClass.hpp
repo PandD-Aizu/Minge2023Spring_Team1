@@ -26,6 +26,10 @@ public:
 		Box,
 		ReflectiveWallL,
 		ReflectiveWallR,
+		Rock1,
+		Rock2,
+		Rock3,
+
 	};
 
 	Array<Kind>& operator[](size_t y);
@@ -62,6 +66,10 @@ public:
 	// @brief 箱とプレイヤーが隣接してたらフラグをtrueにする
 	// @param プレイヤーの位置と移動方向
 	void setAdjacentFlag(Point, Direction);
+
+	// @param 岩の移動方向
+	// @return プレイヤーが移動可能かを返す
+	bool moveRock(int, int, Direction);
 
 private:
 	Array<Array<Kind>> tiles;

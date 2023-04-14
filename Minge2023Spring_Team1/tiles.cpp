@@ -53,26 +53,38 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 
 			// マスの種類によって描画を変える
 			switch (tiles[i][j]) {
-			case Tiles::Kind::None:
+			case Kind::None:
 				drawNone(box, j, i);
 				break;
-			case Tiles::Kind::Wall:
+			case Kind::Wall:
 				box.draw(Palette::Brown);
 				break;
-			case Tiles::Kind::Target:
+			case Kind::Target:
 				drawNone(box, j, i);
 				Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
 				break;
-			case Tiles::Kind::Box:
+			case Kind::Box:
 				box.draw(Palette::Rosybrown);
 				break;
-			case Tiles::Kind::ReflectiveWallL:
+			case Kind::ReflectiveWallL:
 				drawNone(box, j, i);
 				box.scaled(0.8, 0.15).rotated(45_deg).draw(Palette::Purple);
 				break;
-			case Tiles::Kind::ReflectiveWallR:
+			case Kind::ReflectiveWallR:
 				drawNone(box, j, i);
 				box.scaled(0.8, 0.15).rotated(-45_deg).draw(Palette::Purple);
+				break;
+			case Kind::Rock3:
+				drawNone(box, j, i);
+				box.draw(Palette::Sandybrown);
+				break;
+			case Kind::Rock2:
+				drawNone(box, j, i);
+				box.scaled(0.8).draw(Palette::Sandybrown);
+				break;
+			case Kind::Rock1:
+				drawNone(box, j, i);
+				box.scaled(0.8*0.8).draw(Palette::Sandybrown);
 				break;
 			}
 
@@ -192,10 +204,71 @@ void Tiles::setAdjacentFlag(Point pos, Direction direction) {
 	}
 
 
-	if (0 <= pos.y and pos.y < size() and 0 <= pos.x and pos.x < width_size() and tiles[pos.y][pos.x] == Kind::Box) {
+	if (0 <= pos.y and pos.y < size() and 0 <= pos.x and pos.x < width_size() and (tiles[pos.y][pos.x] == Kind::Box or tiles[pos.y][pos.x] == Kind::Rock1 or tiles[pos.y][pos.x] == Kind::Rock2 or tiles[pos.y][pos.x] == Kind::Rock3)) {
 		adjacent_flag = true;
 	}
 	else {
 		adjacent_flag = false;
 	}
+}
+
+bool Tiles::moveRock(int x, int y, Direction direction) {
+	if (tiles[y][x] != Kind::Rock1 and tiles[y][x] != Kind::Rock2 and tiles[y][x] != Kind::Rock3) { // 安全対策
+		return true;
+	}
+
+	// 走り出しの時に箱が隣接していなかった場合は、プレイヤーは止まる
+	if (adjacent_flag == false) {
+		switch (tiles[y][x])
+		{
+		case Tiles::Kind::Rock1:
+			tiles[y][x] = Kind::None;
+			break;
+		case Tiles::Kind::Rock2:
+			tiles[y][x] = Kind::Rock1;
+			break;
+		case Tiles::Kind::Rock3:
+			tiles[y][x] = Kind::Rock2;
+			break;
+		default:
+			break;
+		}
+		return false;
+	}
+
+	Point new_pos(x, y);
+	switch (direction)
+	{
+	case Direction::Up:
+		new_pos.y--;
+		break;
+	case Direction::Down:
+		new_pos.y++;
+		break;
+	case Direction::Right:
+		new_pos.x++;
+		break;
+	case Direction::Left:
+		new_pos.x--;
+		break;
+	default:
+		break;
+	}
+
+	// 箱の新しい位置が壁か別の箱ならば、箱を消す
+	if (0 > new_pos.x or new_pos.x >= width_size() or new_pos.y < 0 or new_pos.y >= size() or (tiles[new_pos.y][new_pos.x] != Kind::Target and tiles[new_pos.y][new_pos.x] != Kind::None)) {
+		return false;
+	}
+
+
+	// 現在の岩の段階を取得
+	Kind current_kind = tiles[y][x];
+
+	// 現在の箱を消す
+	tiles[y][x] = Kind::None;
+
+	// 新しい位置に岩を生やす
+	tiles[new_pos.y][new_pos.x] = current_kind;
+
+	return true;
 }
