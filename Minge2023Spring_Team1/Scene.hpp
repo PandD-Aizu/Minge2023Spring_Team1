@@ -52,10 +52,16 @@ public:
 	// 描画関数（オプション）
 	void draw() const override;
 private:
-	Stopwatch clear_time;
+	// カウントダウン用のタイマー
+	Timer timeLimit{ 0.1min };
 
 	Tiles tiles;
 	Player player;
+
+	// ターゲット破壊時のタイマー基礎増加分
+	const Duration TIMER_INCREASE_BREAK_TARGET = 5s;
+	// 箱破壊時のタイマー基礎増加分
+	const Duration TIMER_INCREASE_BREAK_BOX = 5s;
 };
 
 class StageSelect : public App::Scene

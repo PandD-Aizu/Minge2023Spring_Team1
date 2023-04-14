@@ -10,6 +10,13 @@ enum class Direction {
 	None
 };
 
+// ゲーム上のイベント
+enum class GameEvent {
+	BreakTarget,
+	BreakBox,
+	None
+};
+
 class Tiles {
 public:
 	// @param stage_number ステージ番号
@@ -69,6 +76,10 @@ public:
 	// @param プレイヤーの位置と移動方向
 	void setAdjacentFlag(Point, Direction);
 
+	// @brief イベントのキューから一つ取り出す
+	// @return イベント種別　なにも無かった場合、GameEvent::None
+	GameEvent popEventQueue();
+
 private:
 	Array<Array<Kind>> tiles;
 
@@ -85,6 +96,9 @@ private:
 		Texture{U"sprites/grass_flower.png"},
 		Texture{U"sprites/grass_rock.png" },
 	};
+
+	// 箱、ターゲットの破壊などイベント情報を保持するキュー
+	Array<GameEvent> eventQueue;
 };
 
 // プレイヤー
@@ -101,7 +115,7 @@ public:
 	*/
 	Player(Tiles& tiles, Point position);
 
-	// 毎フレーム呼ぶ
+	// @brief 毎フレーム呼ぶ
 	void update();
 
 	// @brief 描画
