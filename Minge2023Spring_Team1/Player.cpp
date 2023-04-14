@@ -36,10 +36,14 @@ void Player::update() {
 
 			if (KeyShift.pressed()) {
 				// ダッシュ移動開始
+				tiles.pushEventQueue(GameEvent::PlayerDash);
+
 				dashFlag = true;
 			}
 			else {
 				// 通常歩行処理
+				tiles.pushEventQueue(GameEvent::PlayerWalk);
+
 				MoveStatus moveStatus = move(direction);
 				if (moveStatus != MoveStatus::Failed) {
 					if (moveStatus == MoveStatus::AutoWalk) autoWalkFlag = true;

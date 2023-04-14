@@ -66,10 +66,15 @@ void EndlessStage::update()
 	for (GameEvent e = tiles.popEventQueue(); e != GameEvent::None; e = tiles.popEventQueue()) {
 		switch (e) {
 		case GameEvent::BreakTarget:
-			timeLimit.setRemaining(timeLimit.remaining() + TIMER_INCREASE_BREAK_TARGET);
+			increaseTime(TIMER_INCREASE_BREAK_TARGET * (1 + combo * 0.1));
+			combo++;
 			break;
 		case GameEvent::BreakBox:
-			timeLimit.setRemaining(timeLimit.remaining() + TIMER_INCREASE_BREAK_BOX);
+			increaseTime(TIMER_INCREASE_BREAK_BOX * (1 + combo * 0.1));
+			combo++;
+			break;
+		case GameEvent::PlayerWalk:
+			combo = 0;
 			break;
 		}
 	}
@@ -91,6 +96,7 @@ void EndlessStage::draw() const
 	const int score_x_pos = Scene::Center().x + tiles_size / 2 + 120;
 	font(timeLimit.format(U"MM:ss.xx")).drawAt(score_x_pos, 50);
 	font(U"歩行:{}回"_fmt(player.get_walk_count())).drawAt(score_x_pos, 100);
+	if (combo >= 2) font(U"{} Combo!"_fmt(combo)).drawAt(score_x_pos, 150);
 
 	// 画面下カウントダウンバーの描画
 	double timeRatio = timeLimit.remaining() / 1min;
@@ -114,4 +120,8 @@ void EndlessStage::draw() const
 		pos = font_score(U"スコア: {}"_fmt(U"hoge")).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // スコアの表示
 		font_score(U"SHIFTキーでステージセレクトへ").draw(Arg::bottomCenter = score_board.bottomCenter(), Palette::Black);
 	}
+}
+
+void EndlessStage::increaseTime(Duration d) {
+	timeLimit.setRemaining(timeLimit.remaining() + d);
 }

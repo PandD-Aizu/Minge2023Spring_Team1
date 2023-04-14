@@ -207,6 +207,10 @@ void Tiles::setAdjacentFlag(Point pos, Direction direction) {
 	}
 }
 
+void Tiles::pushEventQueue(GameEvent e) {
+	eventQueue << e;
+}
+
 GameEvent Tiles::popEventQueue() {
 	if (eventQueue.isEmpty()) return GameEvent::None;
 	else {

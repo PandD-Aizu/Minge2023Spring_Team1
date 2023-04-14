@@ -51,9 +51,17 @@ public:
 
 	// 描画関数（オプション）
 	void draw() const override;
+
+	// @brief タイマーの残り時間を増やす
+	// @param d 増やす時間
+	void increaseTime(Duration d);
+
 private:
 	// カウントダウン用のタイマー
 	Timer timeLimit{ 0.1min };
+
+	// コンボ数カウンタ
+	int32 combo = 0;
 
 	Tiles tiles;
 	Player player;

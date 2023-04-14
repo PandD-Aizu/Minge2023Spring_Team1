@@ -14,6 +14,8 @@ enum class Direction {
 enum class GameEvent {
 	BreakTarget,
 	BreakBox,
+	PlayerWalk,
+	PlayerDash,
 	None
 };
 
@@ -73,6 +75,10 @@ public:
 	// @brief イベントのキューから一つ取り出す
 	// @return イベント種別　なにも無かった場合、GameEvent::None
 	GameEvent popEventQueue();
+
+	// @brief イベントのキューに一つ追加する
+	// @param e 追加するイベント種別
+	void pushEventQueue(GameEvent e);
 
 private:
 	Array<Array<Kind>> tiles;
