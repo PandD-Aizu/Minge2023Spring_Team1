@@ -26,6 +26,7 @@ public:
 		Box,
 		ReflectiveWallL,
 		ReflectiveWallR,
+		WarpHole,
 	};
 
 	Array<Kind>& operator[](size_t y);
@@ -48,6 +49,11 @@ public:
 
 	// @brief 残っているターゲットの数を返す
 	int32 getTargetNum() const;
+
+	// @brief もう一つのワープホールの位置を返す
+	// @param position 検索から除外するワープホールの位置
+	// @return ワープホールの位置
+	Point getAnotherWarpHolePos(Point position);
 
 	// @brief 指定位置にあるターゲットを破壊する
 	// @param position 対象ターゲットの位置
@@ -135,6 +141,8 @@ private:
 	bool dashFlag = false;
 	// 自動歩行中true
 	bool autoWalkFlag = false;
+	// ワープ可能な状態か（ワープ直後にfalse）
+	bool warpIsEnabled = true;
 
 	// 歩行回数
 	size_t walk_count = 0;

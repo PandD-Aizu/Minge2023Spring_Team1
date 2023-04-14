@@ -74,6 +74,10 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				drawNone(box, j, i);
 				box.scaled(0.8, 0.15).rotated(-45_deg).draw(Palette::Purple);
 				break;
+			case Tiles::Kind::WarpHole:
+				drawNone(box, j, i);
+				Circle(box.pos + box.size / 2, box.size.x / 4).draw(Palette::Purple);
+				break;
 			}
 
 			// マスのフレームを描画
@@ -120,6 +124,16 @@ int32 Tiles::getTargetNum() const {
 		}
 	}
 	return targetNum;
+}
+
+Point Tiles::getAnotherWarpHolePos(Point position) {
+	for (int i = 0; i < tiles.size(); i++) {
+		for (int j = 0; j < tiles[i].size(); j++) {
+			if (tiles[i][j] == Tiles::Kind::WarpHole && Point{ j, i } != position) return Point{ j, i };
+		}
+	}
+
+	throw Error{ U"ワープホールが見つかりませんでした。ワープホールが2つ設置されていない可能性があります。" };
 }
 
 bool Tiles::breakTarget(Point position) {
