@@ -36,7 +36,11 @@ StageSelect::StageSelect(const InitData& init)
 
 
 	//ArrItem = { Rect{ 900, 550, 300, 100 }, font, U"予備", false, other };
-	ArrItem = { Rect{ 900, 550, 300, 100 }, font, U"テスト", true, gotoGame };
+	ArrItem = { Rect{ 700, 550, 200, 100 }, font, U"エンドレステスト", true, endress };
+	ArrItem.StagePass = U"tiles.csv";
+	ButtonTable << ArrItem;
+
+	ArrItem = { Rect{ 1000, 550, 200, 100 }, font, U"テスト", true, gotoGame };
 	ArrItem.StagePass = U"tiles.csv";
 	ButtonTable << ArrItem;
 
@@ -92,7 +96,6 @@ void StageSelect::update()
 			case gotoGame:
 				Print << ButtonTable[i].StagePass;
 
-
 				getData().StagePass = ButtonTable[i].StagePass;
 				getData().StageNo = ButtonTable[i].StageNo;
 
@@ -100,7 +103,12 @@ void StageSelect::update()
 				break;
 
 			case endress :
-				Print << U"B";
+				Print << ButtonTable[i].StagePass;
+
+				getData().StagePass = ButtonTable[i].StagePass;
+				getData().StageNo = ButtonTable[i].StageNo;
+
+				changeScene(SceneList::EndlessStage);
 				break;
 
 			default:
