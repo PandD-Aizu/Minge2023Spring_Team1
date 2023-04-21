@@ -95,6 +95,9 @@ void Player::update() {
 }
 
 void Player::draw(Point left_upper, Point right_bottom) const {
+	// ドット絵をクリアに表示させる
+	const ScopedRenderStates2D sampler{ SamplerState::ClampNearest };
+
 	//ブロックのサイズ算出 (tiles.cppから引用)
 	double block_size = Min((double)(right_bottom.y - left_upper.y) / tiles.size(), (double)(right_bottom.x - left_upper.x) / tiles.width_size());
 
