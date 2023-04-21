@@ -79,15 +79,15 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				break;
 			case Kind::Rock3:
 				drawNone(box, j, i);
-				box(rock_tile_texture[0]).draw();
+				if (Point{ j, i } != animTarget) box(rock_tile_texture[0]).draw();
 				break;
 			case Kind::Rock2:
 				drawNone(box, j, i);
-				box(rock_tile_texture[1]).draw();
+				if (Point{ j, i } != animTarget) box(rock_tile_texture[1]).draw();
 				break;
 			case Kind::Rock1:
 				drawNone(box, j, i);
-				box(rock_tile_texture[2]).draw();
+				if (Point{ j, i } != animTarget) box(rock_tile_texture[2]).draw();
         break;
 			case Tiles::Kind::WarpHole:
 				drawNone(box, j, i);
@@ -106,6 +106,15 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 		switch (tiles[animTarget.y][animTarget.x]) {
 		case Tiles::Kind::Box:
 			getAnimBox(box, block_size)(box_tile_texture).draw();
+			break;
+		case Tiles::Kind::Rock3:
+			getAnimBox(box, block_size)(rock_tile_texture[0]).draw();
+			break;
+		case Tiles::Kind::Rock2:
+			getAnimBox(box, block_size)(rock_tile_texture[1]).draw();
+			break;
+		case Tiles::Kind::Rock1:
+			getAnimBox(box, block_size)(rock_tile_texture[2]).draw();
 			break;
 		}
 	}
@@ -272,6 +281,7 @@ bool Tiles::moveRock(int x, int y, Direction direction) {
 		}
 	}
 
+	Point old_pos(x, y);
 	Point new_pos(x, y);
 	switch (direction)
 	{
@@ -305,6 +315,8 @@ bool Tiles::moveRock(int x, int y, Direction direction) {
 
 	// 新しい位置に岩を生やす
 	tiles[new_pos.y][new_pos.x] = current_kind;
+
+	invokeAnimation(new_pos, new_pos - old_pos);
 
 	return true;
 }
