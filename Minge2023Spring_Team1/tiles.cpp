@@ -223,17 +223,17 @@ bool Tiles::moveRock(int x, int y, Direction direction) {
 		{
 		case Tiles::Kind::Rock1:
 			tiles[y][x] = Kind::None;
+			return true;
 			break;
 		case Tiles::Kind::Rock2:
 			tiles[y][x] = Kind::Rock1;
+			return false;
 			break;
 		case Tiles::Kind::Rock3:
 			tiles[y][x] = Kind::Rock2;
-			break;
-		default:
+			return false;
 			break;
 		}
-		return false;
 	}
 
 	Point new_pos(x, y);
