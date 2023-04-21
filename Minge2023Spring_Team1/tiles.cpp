@@ -64,7 +64,8 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
 				break;
 			case Tiles::Kind::Box:
-				box.draw(Palette::Rosybrown);
+				drawNone(box, j, i);
+				box(box_tile_texture).draw();
 				break;
 			case Tiles::Kind::ReflectiveWallL:
 				drawNone(box, j, i);

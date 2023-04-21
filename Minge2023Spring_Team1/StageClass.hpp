@@ -97,6 +97,9 @@ private:
 		Texture{U"sprites/grass_rock.png" },
 	};
 
+	// 箱のテクスチャ
+	const Texture box_tile_texture{ U"sprites/box.png" };
+
 	// 箱、ターゲットの破壊などイベント情報を保持するキュー
 	Array<GameEvent> eventQueue;
 };
