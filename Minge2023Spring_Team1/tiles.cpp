@@ -41,6 +41,8 @@ Array<Array<Tiles::Kind>>::iterator Tiles::end() {
 
 // ブロックの描画
 void Tiles::draw(Point left_upper, Point right_bottom) const {
+	// ドット絵をクリアに表示させる
+	const ScopedRenderStates2D sampler{ SamplerState::ClampNearest };
 
 	//ブロックのサイズ算出
 	double block_size = Min((double)(right_bottom.y - left_upper.y) / size(), (double)(right_bottom.x - left_upper.x) / width_size());
