@@ -4,14 +4,15 @@
 
 
 
-StageSelect::StageSelect(const InitData & init)
+StageSelect::StageSelect(const InitData& init)
 	: IScene{ init }
 {
 
 	ButtonItem ArrItem;
 	String StagePass_;
 
-	
+	size_t tentative_stageMax = 3;
+
 
 	for (size_t i = 0; i < 17; i++)
 	{
@@ -20,21 +21,27 @@ StageSelect::StageSelect(const InitData & init)
 		ArrItem.rect = Rect{ 100 + 150 * x, 50 + 150 * y, 100, 100 };
 		ArrItem.font = font;
 		ArrItem.text = U"{:0>3}"_fmt(i + 1);
-		ArrItem.enabled = true;
 		ArrItem.response = gotoGame;
+
+		ArrItem.enabled = true;
+		//ArrItem.enabled = (i < tentative_stageMax);
 
 		ArrItem.StageNo = i + 1;
 
-		StagePass_ = U"";
-		StagePass_ += U"{:0>3}"_fmt(i + 1);
-		StagePass_ += U".csv";
+		StagePass_ = U"stage/n{:0>3}.csv"_fmt(i + 1);
 		ArrItem.StagePass = StagePass_;
 
 		ButtonTable << ArrItem;
 	}
 
 
-	ArrItem = { Rect{ 900, 550, 300, 100 }, font, U"予備", false, other };
+	//ArrItem = { Rect{ 900, 550, 300, 100 }, font, U"予備", false, other };
+	ArrItem = { Rect{ 700, 550, 200, 100 }, font, U"エンドレステスト", true, endress };
+	ArrItem.StagePass = U"tiles.csv";
+	ButtonTable << ArrItem;
+
+	ArrItem = { Rect{ 1000, 550, 200, 100 }, font, U"テスト", true, gotoGame };
+	ArrItem.StagePass = U"tiles.csv";
 	ButtonTable << ArrItem;
 
 	cursorMax = ButtonTable.size();
@@ -82,7 +89,7 @@ void StageSelect::update()
 		if (ButtonMouseOver(ButtonTable[i].rect, ButtonTable[i].enabled)) cursorPos = i;
 
 		if (ButtonClicked(ButtonTable[i].rect, ButtonTable[i].enabled)
-			|| (cursorPos == i && KeyEnter.down()) )
+			|| (cursorPos == i && KeyEnter.down() && ButtonTable[i].enabled) )
 		{
 			switch (ButtonTable[i].response)
 			{
@@ -92,10 +99,16 @@ void StageSelect::update()
 				getData().StagePass = ButtonTable[i].StagePass;
 				getData().StageNo = ButtonTable[i].StageNo;
 
+				changeScene(SceneList::Stage);
 				break;
 
 			case endress :
-				Print << U"B";
+				Print << ButtonTable[i].StagePass;
+
+				getData().StagePass = ButtonTable[i].StagePass;
+				getData().StageNo = ButtonTable[i].StageNo;
+
+				changeScene(SceneList::EndlessStage);
 				break;
 
 			default:

@@ -5,17 +5,19 @@
 Stage::Stage(const InitData& init)
 	: IScene{ init }, player(tiles, { 0, 0 })
 {
+	ClearPrint();
+
 	// CSVからtilesにデータを追加する
-	const CSV csv{ U"tiles.csv" };
-	//サンプルステージ作りました。ご活用ください。
-	//const CSV csv{ U"Test1.csv" };
+	const CSV csv{ getData().StagePass };
 
 	if (not csv) // もし読み込みに失敗したら
 	{
-		throw Error{ U"Failed to load `tiles.csv`" };
+		throw Error{ U"Failed to load CSV of Stage" };
 	}
 
-	tiles.setStageNumber(1);
+
+	tiles.setStageNumber(getData().StageNo);
+
 	for (size_t row = 0; row < csv.rows(); row++)
 	{
 		Array<Tiles::Kind> x;
@@ -31,6 +33,9 @@ Stage::Stage(const InitData& init)
 			}
 			else if (v == U"3" or v == U"B" or v == U"Box") {
 				x << Tiles::Kind::Box;
+			}
+			else if (v == U"4" or v == U"R" or v == U"Rock") {
+				x << Tiles::Kind::Rock3;
 			}
 			else if (v == U"5" or v == U"RL" or v == U"RefWallL") {
 				x << Tiles::Kind::ReflectiveWallL;
