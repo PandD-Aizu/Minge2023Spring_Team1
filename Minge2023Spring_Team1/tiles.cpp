@@ -79,15 +79,15 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				break;
 			case Kind::Rock3:
 				drawNone(box, j, i);
-				box.draw(Palette::Sandybrown);
+				box(rock_tile_texture[0]).draw();
 				break;
 			case Kind::Rock2:
 				drawNone(box, j, i);
-				box.scaled(0.8).draw(Palette::Sandybrown);
+				box(rock_tile_texture[1]).draw();
 				break;
 			case Kind::Rock1:
 				drawNone(box, j, i);
-				box.scaled(0.8*0.8).draw(Palette::Sandybrown);
+				box(rock_tile_texture[2]).draw();
         break;
 			case Tiles::Kind::WarpHole:
 				drawNone(box, j, i);

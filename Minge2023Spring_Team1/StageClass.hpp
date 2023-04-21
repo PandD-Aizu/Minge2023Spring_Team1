@@ -113,6 +113,12 @@ private:
 
 	// 箱のテクスチャ
 	const Texture box_tile_texture{ U"sprites/box.png" };
+	// 岩のテクスチャ
+	const Array<Texture> rock_tile_texture{
+		Texture{ U"sprites/big_rock_4.png" },
+		Texture{ U"sprites/big_rock_5.png" },
+		Texture{ U"sprites/big_rock_6.png" }
+	};
 
 	// 箱、ターゲットの破壊などイベント情報を保持するキュー
 	Array<GameEvent> eventQueue;
