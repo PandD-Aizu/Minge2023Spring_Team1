@@ -23,8 +23,8 @@ StageSelect::StageSelect(const InitData& init)
 		ArrItem.text = U"{:0>3}"_fmt(i + 1);
 		ArrItem.response = gotoGame;
 
-		//ArrItem.enabled = true;
-		ArrItem.enabled = (i < tentative_stageMax);
+		ArrItem.enabled = true;
+		//ArrItem.enabled = (i < tentative_stageMax);
 
 		ArrItem.StageNo = i + 1;
 
