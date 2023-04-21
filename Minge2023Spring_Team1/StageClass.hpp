@@ -80,12 +80,19 @@ public:
 	// @return イベント種別　なにも無かった場合、GameEvent::None
 	GameEvent popEventQueue();
 
+	/**
+	* @brief アニメーションを起こす。target - deltaPosを起点、targetを終点としてアニメーションされる。
+	* @param target アニメーション対象のタイル
+	* @param deltaPos 移動ベクトル
+	*/
+	void invokeAnimation(Point target, Point deltaPos);
+
 private:
 	Array<Array<Kind>> tiles;
 
 	// 箱とプレイヤーが隣接しているかのフラグ
 	bool adjacent_flag = false;
-	// @breif 何もないフィールドの描画
+	// @brief 何もないフィールドの描画
 	void drawNone(RectF,int,int) const;
 
 	// ステージ番号
@@ -102,6 +109,21 @@ private:
 
 	// 箱、ターゲットの破壊などイベント情報を保持するキュー
 	Array<GameEvent> eventQueue;
+
+	// === アニメーション関連 ===
+	/**
+	* @brief 現在の描画座標を取得する
+	* @param destBox アニメーション終点位置の描画形状
+	* @param block_size 1タイルあたりのサイズ
+	*/
+	RectF getAnimBox(RectF destBox, double block_size) const;
+	// アニメーション対象座標
+	Point animTarget;
+	// アニメーション上の移動方向
+	Point animDeltaPos;
+	// タイマーが動いている間アニメーション
+	Timer animTimer{ 0.1s };
+	// ==========================
 };
 
 // プレイヤー
@@ -166,7 +188,6 @@ private:
 
 	// ゲームクリア時にtrue
 	bool gameClearFlag = false;
-
 
 	// テクスチャ
 	Array<Texture> textures;

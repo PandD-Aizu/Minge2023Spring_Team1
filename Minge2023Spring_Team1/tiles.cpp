@@ -65,7 +65,7 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				break;
 			case Tiles::Kind::Box:
 				drawNone(box, j, i);
-				box(box_tile_texture).draw();
+				if (Point{ j, i } != animTarget) box(box_tile_texture).draw();
 				break;
 			case Tiles::Kind::ReflectiveWallL:
 				drawNone(box, j, i);
@@ -83,6 +83,16 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 
 			// マスのフレームを描画
 			box.drawFrame(3, 3, Palette::Green);
+		}
+	}
+
+	// アニメーション処理
+	if (animTimer.isRunning()) {
+		RectF box((Vec2)left_upper + Vec2(animTarget.x * block_size, animTarget.y * block_size), block_size);
+		switch (tiles[animTarget.y][animTarget.x]) {
+		case Tiles::Kind::Box:
+			getAnimBox(box, block_size)(box_tile_texture).draw();
+			break;
 		}
 	}
 }
@@ -157,6 +167,7 @@ bool Tiles::moveBox(int x, int y, Direction direction) {
 		return true;
 	}
 
+	Point old_pos(x, y);
 	Point new_pos(x, y);
 	switch (direction)
 	{
@@ -192,6 +203,7 @@ bool Tiles::moveBox(int x, int y, Direction direction) {
 
 	// 新しい位置に箱を生やす
 	tiles[new_pos.y][new_pos.x] = Kind::Box;
+	invokeAnimation(new_pos, new_pos - old_pos);
 
 	return true;
 }
@@ -229,4 +241,17 @@ GameEvent Tiles::popEventQueue() {
 		eventQueue.pop_front();
 		return gameEvent;
 	}
+}
+
+void Tiles::invokeAnimation(Point target, Point deltaPos) {
+	animTarget = target;
+	animDeltaPos = deltaPos;
+	animTimer.restart();
+}
+
+RectF Tiles::getAnimBox(RectF destBox, double block_size) const {
+	// アニメーション進捗度（1.0～0）
+	double progress = animTimer.remaining() / animTimer.duration();
+
+	return destBox.movedBy(Vec2{ block_size, block_size } *-(animDeltaPos * progress));
 }
