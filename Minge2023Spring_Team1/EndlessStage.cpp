@@ -6,16 +6,16 @@ EndlessStage::EndlessStage(const InitData& init)
 	: IScene{ init }, player(tiles, { 0, 0 })
 {
 	// CSVからtilesにデータを追加する
-	const CSV csv{ U"tiles.csv" };
-	//サンプルステージ作りました。ご活用ください。
-	//const CSV csv{ U"Test1.csv" };
+	const CSV csv{ getData().StagePass };
 
 	if (not csv) // もし読み込みに失敗したら
 	{
-		throw Error{ U"Failed to load `tiles.csv`" };
+		throw Error{ U"Failed to load CSV of Stage" };
 	}
 
-	tiles.setStageNumber(1);
+
+	tiles.setStageNumber(getData().StageNo);
+
 	for (size_t row = 0; row < csv.rows(); row++)
 	{
 		Array<Tiles::Kind> x;
@@ -37,6 +37,9 @@ EndlessStage::EndlessStage(const InitData& init)
 			}
 			else if (v == U"6" or v == U"RR" or v == U"RefWallR") {
 				x << Tiles::Kind::ReflectiveWallR;
+			}
+			else if (v == U"7" or v == U"H" or v == U"WarpHole") {
+				x << Tiles::Kind::WarpHole;
 			}
 			else {
 				throw Error{ U"csvに変なモノ({})が混じっています"_fmt(v) };
