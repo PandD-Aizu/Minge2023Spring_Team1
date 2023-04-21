@@ -10,6 +10,13 @@ enum class Direction {
 	None
 };
 
+// ゲーム上のイベント
+enum class GameEvent {
+	BreakTarget,
+	BreakBox,
+	None
+};
+
 class Tiles {
 public:
 	// @param stage_number ステージ番号
@@ -29,7 +36,7 @@ public:
 		Rock1,
 		Rock2,
 		Rock3,
-
+		WarpHole,
 	};
 
 	Array<Kind>& operator[](size_t y);
@@ -53,6 +60,11 @@ public:
 	// @brief 残っているターゲットの数を返す
 	int32 getTargetNum() const;
 
+	// @brief もう一つのワープホールの位置を返す
+	// @param position 検索から除外するワープホールの位置
+	// @return ワープホールの位置
+	Point getAnotherWarpHolePos(Point position);
+
 	// @brief 指定位置にあるターゲットを破壊する
 	// @param position 対象ターゲットの位置
 	// @return 正常に破壊できた場合trueを返す
@@ -71,6 +83,11 @@ public:
 	// @return プレイヤーが移動可能かを返す
 	bool moveRock(int, int, Direction);
 
+	// @brief イベントのキューから一つ取り出す
+	// @return イベント種別　なにも無かった場合、GameEvent::None
+	GameEvent popEventQueue();
+
+
 private:
 	Array<Array<Kind>> tiles;
 
@@ -87,6 +104,9 @@ private:
 		Texture{U"sprites/grass_flower.png"},
 		Texture{U"sprites/grass_rock.png" },
 	};
+
+	// 箱、ターゲットの破壊などイベント情報を保持するキュー
+	Array<GameEvent> eventQueue;
 };
 
 // プレイヤー
@@ -103,7 +123,7 @@ public:
 	*/
 	Player(Tiles& tiles, Point position);
 
-	// 毎フレーム呼ぶ
+	// @brief 毎フレーム呼ぶ
 	void update();
 
 	// @brief 描画
@@ -143,6 +163,8 @@ private:
 	bool dashFlag = false;
 	// 自動歩行中true
 	bool autoWalkFlag = false;
+	// ワープ可能な状態か（ワープ直後にfalse）
+	bool warpIsEnabled = true;
 
 	// 歩行回数
 	size_t walk_count = 0;

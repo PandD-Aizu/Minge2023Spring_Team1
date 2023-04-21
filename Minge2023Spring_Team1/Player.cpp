@@ -123,16 +123,27 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	// 戻り値
 	MoveStatus moveStatus = MoveStatus::None;
 
-	// 移動前位置を記録
-	lastPosition = position;
-
 	// 進行方向
 	Point deltaPos;
 	if (movingDirection == Direction::Up) deltaPos = { 0, -1 };
 	else if (movingDirection == Direction::Down) deltaPos = { 0, 1 };
 	else if (movingDirection == Direction::Left) deltaPos = { -1, 0 };
 	else if (movingDirection == Direction::Right) deltaPos = { 1, 0 };
-	else return MoveStatus::Failed;
+	else throw Error{ U"movingDirection引数にDirection::Noneを渡した場合の処理は未定義です" };
+
+	// 床がワープホールだった場合のワープ処理
+	if (warpIsEnabled && tiles[position.y][position.x] == Tiles::Kind::WarpHole) {
+		Point destinationPos = tiles.getAnotherWarpHolePos(position);
+		position = destinationPos;
+		warpIsEnabled = false; // ワープ先でもう一度移動するまでワープを無効にする
+
+		if (!dashFlag) tiles.setAdjacentFlag(position, movingDirection); // ダッシュしていなかったら、箱隣接判定をリセットする
+	}
+
+	// 移動前位置を記録
+	lastPosition = position;
+
+
 
 	Point nextPos = position + deltaPos;
 
@@ -145,7 +156,8 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 	case Tiles::Kind::Wall:
 		// 壁だった場合
 		// 移動せず終了
-		return MoveStatus::Failed;
+		moveStatus = MoveStatus::Failed;
+		break;
 	case Tiles::Kind::Target:
 		// ターゲットだった場合
 		// ターゲットを破壊して進む
@@ -154,7 +166,7 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		break;
 	case Tiles::Kind::Box:
 		if (not tiles.moveBox(nextPos.x, nextPos.y, movingDirection)) {
-			return MoveStatus::Failed;
+			moveStatus = MoveStatus::Failed;
 		}
 		break;
 	case Tiles::Kind::Rock1:
@@ -202,10 +214,18 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 			break;
 		}
 		break;
+	case Tiles::Kind::WarpHole:
+		// ワープホール
+		// 一旦自動歩行させて、ワープタイルの真上に来てから処理する（次の移動で処理する）
+		moveStatus = MoveStatus::AutoWalk; // 自動歩行
+		break;
 	}
 
-	// 移動確定
-	position = nextPos;
+	if (moveStatus != MoveStatus::Failed) {
+		// 移動確定
+		position = nextPos;
+		warpIsEnabled = true;
+	}
 
 	return moveStatus;
 }

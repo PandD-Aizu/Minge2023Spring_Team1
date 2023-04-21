@@ -85,6 +85,10 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 			case Kind::Rock1:
 				drawNone(box, j, i);
 				box.scaled(0.8*0.8).draw(Palette::Sandybrown);
+        break;
+			case Tiles::Kind::WarpHole:
+				drawNone(box, j, i);
+				Circle(box.pos + box.size / 2, box.size.x / 4).draw(Palette::Purple);
 				break;
 			}
 
@@ -134,9 +138,21 @@ int32 Tiles::getTargetNum() const {
 	return targetNum;
 }
 
+Point Tiles::getAnotherWarpHolePos(Point position) {
+	for (int i = 0; i < tiles.size(); i++) {
+		for (int j = 0; j < tiles[i].size(); j++) {
+			if (tiles[i][j] == Tiles::Kind::WarpHole && Point{ j, i } != position) return Point{ j, i };
+		}
+	}
+
+	throw Error{ U"ワープホールが見つかりませんでした。ワープホールが2つ設置されていない可能性があります。" };
+}
+
 bool Tiles::breakTarget(Point position) {
 	if (tiles[position.y][position.x] == Tiles::Kind::Target) {
 		tiles[position.y][position.x] = Tiles::Kind::None;
+		// ターゲットの破壊に成功
+		eventQueue << GameEvent::BreakTarget;
 		return true;
 	}
 	return false;
@@ -177,7 +193,12 @@ bool Tiles::moveBox(int x, int y, Direction direction) {
 	// 箱の新しい位置が壁か別の箱ならば、箱を消す
 	if (0 > new_pos.x or new_pos.x >= width_size() or new_pos.y < 0 or new_pos.y >= size() or (tiles[new_pos.y][new_pos.x] != Kind::Target and tiles[new_pos.y][new_pos.x] != Kind::None)) {
 		adjacent_flag = false;
+		eventQueue << GameEvent::BreakBox;
 		return true;
+	}
+	else if (tiles[new_pos.y][new_pos.x] == Kind::Target) {
+		// 箱の移動先にターゲットがあったら破壊する
+		breakTarget(new_pos);
 	}
 
 	// 新しい位置に箱を生やす
@@ -271,4 +292,13 @@ bool Tiles::moveRock(int x, int y, Direction direction) {
 	tiles[new_pos.y][new_pos.x] = current_kind;
 
 	return true;
+}
+
+GameEvent Tiles::popEventQueue() {
+	if (eventQueue.isEmpty()) return GameEvent::None;
+	else {
+		GameEvent gameEvent = eventQueue.front();
+		eventQueue.pop_front();
+		return gameEvent;
+	}
 }

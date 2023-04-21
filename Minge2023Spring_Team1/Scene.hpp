@@ -39,6 +39,31 @@ private:
 	Player player;
 };
 
+class EndlessStage : public App::Scene
+{
+public:
+
+	// コンストラクタ（必ず実装）
+	EndlessStage(const InitData& init);
+
+	// 更新関数（オプション）
+	void update() override;
+
+	// 描画関数（オプション）
+	void draw() const override;
+private:
+	// カウントダウン用のタイマー
+	Timer timeLimit{ 0.1min };
+
+	Tiles tiles;
+	Player player;
+
+	// ターゲット破壊時のタイマー基礎増加分
+	const Duration TIMER_INCREASE_BREAK_TARGET = 5s;
+	// 箱破壊時のタイマー基礎増加分
+	const Duration TIMER_INCREASE_BREAK_BOX = 5s;
+};
+
 class StageSelect : public App::Scene
 {
 private:
