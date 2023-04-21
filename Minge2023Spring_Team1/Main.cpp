@@ -12,7 +12,7 @@ void Main()
 	manager.add<EndlessStage>(SceneList::EndlessStage);
 	manager.add<StageSelect>(SceneList::StageSelect);
 
-	manager.init(SceneList::EndlessStage);
+	manager.init(SceneList::StageSelect);
 
 	// 画面サイズを変更
 	Window::Resize(1280, 720);
