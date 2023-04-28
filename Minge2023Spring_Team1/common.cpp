@@ -5,5 +5,4 @@ InputGroup inputUp = KeyW | KeyUp;
 InputGroup inputDown = KeyS | KeyDown;
 InputGroup inputLeft = KeyA | KeyLeft;
 InputGroup inputRight = KeyD | KeyRight;
-
-int a;
+InputGroup decisionKey = KeyEnter | KeySpace;
