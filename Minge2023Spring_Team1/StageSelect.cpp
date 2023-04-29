@@ -89,7 +89,7 @@ void StageSelect::update()
 		if (ButtonMouseOver(ButtonTable[i].rect, ButtonTable[i].enabled)) cursorPos = i;
 
 		if (ButtonClicked(ButtonTable[i].rect, ButtonTable[i].enabled)
-			|| (cursorPos == i && KeyEnter.down() && ButtonTable[i].enabled) )
+			|| (cursorPos == i && decisionKey.down() && ButtonTable[i].enabled) )
 		{
 			switch (ButtonTable[i].response)
 			{

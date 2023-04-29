@@ -65,8 +65,8 @@ void Stage::update()
 			clear_time.pause();
 		}
 
-		// シフトを押したらシーンをステージセレクトに戻す
-		if (KeyShift.down()) {
+		// 決定キーを押したらシーンをステージセレクトに戻す
+		if (decisionKey.down()) {
 			changeScene(SceneList::StageSelect);
 		}
 		return;
@@ -105,6 +105,6 @@ void Stage::draw() const
 		pos = font_score(U"クリアタイム: {}"_fmt(clear_time.format(U"MM:ss.xx"))).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // クリアタイムの表示
 		pos = font_score(U"歩行回数: {}回"_fmt(player.get_walk_count())).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // 歩行回数の表示
 		pos = font_score(U"スコア: {}"_fmt(U"hoge")).draw(Arg::topCenter = pos.bottomCenter(), Palette::Black); // スコアの表示
-		font_score(U"SHIFTキーでステージセレクトへ").draw(Arg::bottomCenter = score_board.bottomCenter(), Palette::Black);
+		font_score(U"決定キーでステージセレクトへ").draw(Arg::bottomCenter = score_board.bottomCenter(), Palette::Black);
 	}
 }
