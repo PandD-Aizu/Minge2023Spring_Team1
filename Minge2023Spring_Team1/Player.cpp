@@ -165,7 +165,6 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		// ターゲットだった場合
 		// ターゲットを破壊して進む
 		tiles.breakTarget(nextPos);
-		if (tiles.getTargetNum() == 0) gameClearFlag = true;
 		break;
 	case Tiles::Kind::Box:
 		if (not tiles.moveBox(nextPos.x, nextPos.y, movingDirection)) {
@@ -229,6 +228,8 @@ Player::MoveStatus Player::move(Direction &movingDirection) {
 		position = nextPos;
 		warpIsEnabled = true;
 	}
+
+	if (tiles.getTargetNum() == 0) gameClearFlag = true;
 
 	return moveStatus;
 }
