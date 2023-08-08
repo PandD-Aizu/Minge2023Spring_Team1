@@ -106,18 +106,23 @@ private:
 	int stage_number=0;
 
 	const Array<Texture> none_tile_texture{
-		Texture{U"sprites/grass.png"},
-		Texture{U"sprites/grass_flower.png"},
-		Texture{U"sprites/grass_rock.png" },
+		Texture{Resource(U"sprites/grass.png")},
+		Texture{Resource(U"sprites/grass_flower.png")},
+		Texture{Resource(U"sprites/grass_rock.png") },
 	};
 
+	// ターゲットのテクスチャ
+	const Texture target_tile_texture{ Resource(U"sprites/target.png") };
 	// 箱のテクスチャ
-	const Texture box_tile_texture{ U"sprites/box.png" };
+	const Texture box_tile_texture{ Resource(U"sprites/box.png") };
+	// 反射壁のテクスチャ
+	const Texture reflectL_tile_texture{ Resource(U"sprites/reflector_l.png") };
+	const Texture reflectR_tile_texture{ Resource(U"sprites/reflector_r.png") };
 	// 岩のテクスチャ
 	const Array<Texture> rock_tile_texture{
-		Texture{ U"sprites/big_rock_4.png" },
-		Texture{ U"sprites/big_rock_5.png" },
-		Texture{ U"sprites/big_rock_6.png" }
+		Texture{ Resource(U"sprites/big_rock_4.png") },
+		Texture{ Resource(U"sprites/big_rock_5.png") },
+		Texture{ Resource(U"sprites/big_rock_6.png") }
 	};
 
 	// 箱、ターゲットの破壊などイベント情報を保持するキュー

@@ -63,7 +63,8 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				break;
 			case Kind::Target:
 				drawNone(box, j, i);
-				Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
+				box(target_tile_texture).draw();
+				//Circle(box.pos + Vec2(block_size / 2, block_size / 2), block_size / 4).draw(Palette::White);
 				break;
 			case Tiles::Kind::Box:
 				drawNone(box, j, i);
@@ -71,11 +72,11 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 				break;
 			case Kind::ReflectiveWallL:
 				drawNone(box, j, i);
-				box.scaled(0.8, 0.15).rotated(45_deg).draw(Palette::Purple);
+				box(reflectL_tile_texture).draw();
 				break;
 			case Kind::ReflectiveWallR:
 				drawNone(box, j, i);
-				box.scaled(0.8, 0.15).rotated(-45_deg).draw(Palette::Purple);
+				box(reflectR_tile_texture).draw();
 				break;
 			case Kind::Rock3:
 				drawNone(box, j, i);
@@ -92,6 +93,7 @@ void Tiles::draw(Point left_upper, Point right_bottom) const {
 			case Tiles::Kind::WarpHole:
 				drawNone(box, j, i);
 				Circle(box.pos + box.size / 2, box.size.x / 4).draw(Palette::Purple);
+				Circle(box.pos + box.size / 2, box.size.x / 6).draw(Palette::Mediumpurple);
 				break;
 			}
 

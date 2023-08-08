@@ -9,7 +9,7 @@ private:
 	RectF button_startGame; // スタートボタン
 	RectF button_quit; // 終了ボタン
 
-	const Texture background{ U"sprites/title.png" }; // 背景の画像
+	const Texture background{ Resource(U"sprites/title.png") }; // 背景の画像
 public:
 
 	// コンストラクタ（必ず実装）
