@@ -58,6 +58,8 @@ Stage::Stage(const InitData& init)
 // 更新関数
 void Stage::update()
 {
+	if (KeyR.down()) changeScene(SceneList::Stage, 500);
+
 	// ゲームクリア時
 	if (player.isGameCleared()) {
 		// クリアタイムが動いていたら止める
@@ -91,6 +93,7 @@ void Stage::draw() const
 	const int score_x_pos = Scene::Center().x + tiles_size / 2 + 120;
 	font(clear_time.format(U"MM:ss.xx")).drawAt(score_x_pos, 50);
 	font(U"歩行:{}回"_fmt(player.get_walk_count())).drawAt(score_x_pos, 100);
+	font(U"Rでリスタート").drawAt(score_x_pos + 30, Scene::Height() * 0.9);
 
 	if (player.isGameCleared()) {
 		// ゲームクリア時の表示
