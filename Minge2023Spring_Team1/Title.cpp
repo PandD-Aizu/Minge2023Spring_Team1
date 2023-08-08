@@ -48,7 +48,7 @@ void Title::draw() const
 	background.resized(Scene::Width(), Scene::Height()).draw();
 
 	// タイトル名描画
-	font(U"ゲームタイトル！").drawAt(Scene::Center() - Vec2{ 0, Scene::Height() * 0.2 });
+	font(U"スケートラッシュアワー").drawAt(Scene::Center() - Vec2{ 0, Scene::Height() * 0.2 });
 
 	// ボタン描画
 	if (cursorPosition == 0) {

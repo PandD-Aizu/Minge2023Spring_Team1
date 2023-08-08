@@ -14,7 +14,7 @@ StageSelect::StageSelect(const InitData& init)
 	size_t tentative_stageMax = 3;
 
 
-	for (size_t i = 0; i < 17; i++)
+	for (size_t i = 0; i < 10; i++)
 	{
 		int y = i / 7;
 		int x = i % 7;
@@ -36,13 +36,13 @@ StageSelect::StageSelect(const InitData& init)
 
 
 	//ArrItem = { Rect{ 900, 550, 300, 100 }, font, U"予備", false, other };
-	ArrItem = { Rect{ 700, 550, 200, 100 }, font, U"エンドレステスト", true, endress };
-	ArrItem.StagePass = U"tiles.csv";
-	ButtonTable << ArrItem;
+	//ArrItem = { Rect{ 700, 550, 200, 100 }, font, U"エンドレステスト", true, endress };
+	//ArrItem.StagePass = U"tiles.csv";
+	//ButtonTable << ArrItem;
 
-	ArrItem = { Rect{ 1000, 550, 200, 100 }, font, U"テスト", true, gotoGame };
-	ArrItem.StagePass = U"tiles.csv";
-	ButtonTable << ArrItem;
+	//ArrItem = { Rect{ 1000, 550, 200, 100 }, font, U"テスト", true, gotoGame };
+	//ArrItem.StagePass = U"tiles.csv";
+	//ButtonTable << ArrItem;
 
 	cursorMax = ButtonTable.size();
 }
@@ -94,7 +94,7 @@ void StageSelect::update()
 			switch (ButtonTable[i].response)
 			{
 			case gotoGame:
-				Print << ButtonTable[i].StagePass;
+				//Print << ButtonTable[i].StagePass;
 
 				getData().StagePass = ButtonTable[i].StagePass;
 				getData().StageNo = ButtonTable[i].StageNo;
@@ -103,7 +103,7 @@ void StageSelect::update()
 				break;
 
 			case endress :
-				Print << ButtonTable[i].StagePass;
+				//Print << ButtonTable[i].StagePass;
 
 				getData().StagePass = ButtonTable[i].StagePass;
 				getData().StageNo = ButtonTable[i].StageNo;
@@ -112,7 +112,7 @@ void StageSelect::update()
 				break;
 
 			default:
-				Print << U"C";
+				//Print << U"C";
 				break;
 			}
 		}
