@@ -9,7 +9,7 @@ Player::Player(Tiles &tiles, Point position)
 	// テクスチャ読み込み
 	for (auto c : Array<char>{ 'b', 'f', 'l', 'r'}) {
 		for (int n = 0; n < 3; n++) {
-			textures << Texture{ U"sprites/player_{}{}.png"_fmt(c, n) };
+			textures << Texture{ Resource(U"sprites/player_{}{}.png"_fmt(c, n)) };
 		}
 	}
 }

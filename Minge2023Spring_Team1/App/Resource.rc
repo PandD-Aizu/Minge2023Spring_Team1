@@ -138,3 +138,29 @@ Resource(engine/soundfont/GMGSx.sf2.zstdcmp)
 	MYIDENTIFIER_1 FILE "assets/a b c.txt"
 	MYIDENTIFIER_2 FILE "level 1/map.dat"
 */
+
+Resource(sprites/grass.png)
+Resource(sprites/grass_flower.png)
+Resource(sprites/grass_rock.png)
+Resource(sprites/target.png)
+Resource(sprites/box.png)
+Resource(sprites/reflector_l.png)
+Resource(sprites/reflector_r.png)
+Resource(sprites/big_rock_4.png)
+Resource(sprites/big_rock_5.png)
+Resource(sprites/big_rock_6.png)
+
+Resource(sprites/player_f0.png)
+Resource(sprites/player_f1.png)
+Resource(sprites/player_f2.png)
+Resource(sprites/player_b0.png)
+Resource(sprites/player_b1.png)
+Resource(sprites/player_b2.png)
+Resource(sprites/player_l0.png)
+Resource(sprites/player_l1.png)
+Resource(sprites/player_l2.png)
+Resource(sprites/player_r0.png)
+Resource(sprites/player_r1.png)
+Resource(sprites/player_r2.png)
+
+Resource(sprites/title.png)
